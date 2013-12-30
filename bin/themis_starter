@@ -1,0 +1,47 @@
+#!/bin/sh
+# -*- shell-script -*-
+cmdPath=$1
+cmdName=`expr "$cmdPath" : '.*/\(.*\)'`
+execDir=`expr "$cmdPath" : '\(.*\)/'`
+
+if [ -z $execDir ]; then
+  execDir="./"
+fi
+
+shift
+
+cwd=`pwd`
+cd $execDir
+projectDir=''
+done=0
+while [ $done != 1 ]; do
+  if [ -f Themis.py ]; then
+    done=1
+    projectDir=`pwd`
+  else
+    cd ..
+    if [ `pwd` = '/' ]; then
+      echo Did not find 'Themis.py', Themis must be in a project.
+      exit;
+    fi
+  fi
+done
+
+cd $cwd
+
+PY_PATH="$projectDir/lib"
+
+extra=
+if [ -n "$PYTHONPATH" ]; then
+  extra=":$PYTHONPATH"
+fi
+
+export PYTHONPATH="$PY_PATH$extra"
+
+# echo projectDir : $projectDir
+# echo PYTHONPATH : $PYTHONPATH
+# echo execDir    : $execDir
+# echo cmdPath    : $cmdPath
+
+$projectDir/lib/themis.py $projectDir $cmdPath "$@"
+
