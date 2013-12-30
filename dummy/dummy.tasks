@@ -1,5 +1,9 @@
 # -*- python -*-
 from __future__ import print_function
+from Engine     import MasterTbl
+def taskMain():
+  masterTbl = MasterTbl()
+  masterTbl['abc'] = 13
 
-
-
+  task("A")
+  task("B", 1, 3, 5, a=1, b=2, c=3)
