@@ -67,8 +67,8 @@ class Dbg(object):
   
   def print(self,*a,**kw):
     if (not self.active): return
-    sys.stderr.write(self.my_indent_string)
     sA = []
+    sA.append(self.my_indent_string)
     for v in a:
       sA.append(str(v))
 
@@ -77,6 +77,7 @@ class Dbg(object):
       sA.append(key)
       sA.append(" = ")
       sA.append(kw[key])
+    sys.stderr.write("".join(sA))
       
 def main():
 

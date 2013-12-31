@@ -2,6 +2,8 @@ from __future__ import print_function
 from BaseTask   import BaseTask
 from Engine     import MasterTbl
 from Dbg        import Dbg
+from Engine     import find_fn_in_dir_tree
+import os
 
 dbg = Dbg()
 
@@ -10,6 +12,7 @@ class ReadProject(BaseTask):
     BaseTask.__init__(self, name)
 
   def execute(self, *args, **kwargs):
-
-    s = dbg.indent_string()
-    print(s, "In class", self.name(), sep = "")
+    masterTbl = MasterTbl()
+    masterTbl['projectDir'] = find_fn_in_dir_tree(os.getcwd(), masterTbl['projectFn'])
+    dbg.print("projectDir: ", masterTbl['projectDir'], "\n")
+    

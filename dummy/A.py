@@ -8,7 +8,6 @@ dbg = Dbg()
 class A(BaseTask):
   def __init__(self,name):
     BaseTask.__init__(self, name)
-    pass
 
   def execute(self, *args, **kwargs):
 
