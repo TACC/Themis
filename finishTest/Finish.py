@@ -22,6 +22,7 @@ class Finish(BaseTask):
     lineA = f.readlines()
     f.close()
 
+    found  = False
     result = "passed"
 
     for line in lineA:
@@ -29,6 +30,7 @@ class Finish(BaseTask):
       if (line[0] == "#" or len(line) < 1):
         continue
 
+      found = True
       idx = line.find(",")
       if (idx > 0):
         line = line[0:idx]
@@ -37,7 +39,7 @@ class Finish(BaseTask):
         result = line
         break
 
-    if (not result in validA):
+    if (not result in validA or not found):
       result = "failed"
 
     return result
