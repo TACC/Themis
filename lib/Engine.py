@@ -1,7 +1,7 @@
 from __future__ import print_function
 from BaseTask   import BaseTask
 from Dbg        import Dbg
-import os, sys, imp
+import os, sys, imp, platform
 
 master = {}
 
@@ -25,6 +25,19 @@ def Warning(*a):
 def Error(*a):
   __print_tool("Error: ",*a)
   sys.exit(-1)
+
+def get_platform():
+  unameA  = platform.uname()
+  nameA   = ('system', 'node', 'release', 'version', 'machine', 'processor')
+  unameT  = {}
+  targ_summary = os.environ.get("TARG_SUMMARY")
+  if (targ_summary):
+    unameT['targ_summary'] = targ_summary
+
+  for idx in xrange(len(nameA)):
+    unameT[nameA[idx]] = unameA[idx]
+  return unameT
+
 
 def load_from_file(search_dirA, mod_name):
   class_inst = None

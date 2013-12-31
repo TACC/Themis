@@ -1,6 +1,6 @@
 from __future__ import print_function
 from BaseTask   import BaseTask
-from Engine     import MasterTbl, Error
+from Engine     import MasterTbl, Error, get_platform
 from Dbg        import Dbg
 
 import os, json, time, platform
@@ -67,17 +67,11 @@ class Finish(BaseTask):
     runtime['T1'] = t1
     runtime['TT'] = t1 - runtime['T0']
 
-    uname  = platform.uname()
-    unameA = ('system', 'node', 'release', 'version', 'machine', 'processor')
-   
-    for idx in xrange(len(unameA)):
-      runtime[unameA[idx]] = uname[idx]
+    unameT = get_platform()
 
-    targ_summary = os.environ.get("TARG_SUMMARY")
-    if (targ_summary):
-      runtime['targ_summary'] = targ_summary
+    for k in unameT:
+      runtime[k] = unameT[k]
 
     f = open(runtime_fn,"w")
-    f.write(json.dumps(runtime, sort_keys=True, indent=2, separators=(',', ': ')))
+    f.write(json.dumps(runtime, sort_keys=True, indent=2, separators=(', ', ': ')))
     f.close()
-    
