@@ -10,23 +10,22 @@ dbg = Dbg()
 def MasterTbl():
   return master
 
-def load_from_file(filepath):
+def load_from_file(search_dirA, mod_name):
   class_inst = None
   expected_class = 'BaseTask'
-
-  dirName, bareFn = os.path.split(filepath)
-
-  mod_name,file_ext = os.path.splitext(bareFn)
-
   extA = [ ".py", ".pyc" ]
 
-  fn = None
-  
-  for ext in extA:
-    fn = os.path.join(dirName, mod_name+ext)
-    if (os.path.exists(fn)):
-      file_ext = ext
-      break
+  fn     = None
+  fn_ext = None
+  found  = False
+  for d in search_dirA:
+    for ext in extA:
+      fn = os.path.join(d, mod_name+ext)
+      if (os.path.exists(fn)):
+        file_ext = ext
+        found = True
+        break
+    if (found): break
 
   if (file_ext == '.py'):
     py_mod = imp.load_source(mod_name, fn)
@@ -40,9 +39,7 @@ def load_from_file(filepath):
 
 def task(name, *args, **kwargs):
   masterTbl = MasterTbl()
-  taskDir   = masterTbl['taskDir']
-  fn        = os.path.join(taskDir,name)
-  my_task   = load_from_file(fn)
+  my_task   = load_from_file(masterTbl['task_searchA'], name)
   dbg.start(name, *args, **kwargs)
   my_task.execute(*args, **kwargs)
   dbg.fini(name)
@@ -62,15 +59,14 @@ class Engine:
     return ProjectData
 
 
-  def execute(self, projectDir, execDir, execName):
+  def execute(self, themis_project_dir, execDir, execName):
     masterTbl                  = MasterTbl()
-    taskDir                    = os.path.join(projectDir, execName)
+    taskDir                    = os.path.join(themis_project_dir, execName)
     masterTbl['taskDir']       = taskDir
-
-    ProjectData                = self.load_project_data(projectDir)
+    masterTbl['themisPrjDir']  = themis_project_dir
+    ProjectData                = self.load_project_data(themis_project_dir)
     masterTbl["ThemisVersion"] = ProjectData['ThemisVersion']     
-
-    sys.path.append(taskDir)
+    masterTbl['task_searchA']  = (taskDir, os.path.join(themis_project_dir,"lib"))
 
     taskFileName               = os.path.join(taskDir, execName + ".tasks")
     exec(open(taskFileName).read())

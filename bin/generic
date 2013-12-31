@@ -1,0 +1,4 @@
+#!/bin/sh
+# -*- shell-script -*-
+
+themis_starter $0 "$@"
