@@ -55,6 +55,13 @@ class Dbg(object):
       sA.append(str(v))
       sA.append(", ")
 
+
+    for k in sorted(kw):
+      sA.append(str(k))
+      sA.append(" = ")
+      sA.append(str(kw[k]))
+      sA.append(", ")
+
     if (sA[len(sA)-1] == ", "):
       sA[len(sA)-1] = ""
 
