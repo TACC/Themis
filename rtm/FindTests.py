@@ -3,7 +3,8 @@ from BaseTask   import BaseTask
 from Engine     import MasterTbl, Error
 from Dbg        import Dbg
 from fnmatch    import fnmatch
-import os,  sys, json
+from Tst        import Tst
+import os
 
 dbg = Dbg()
 
@@ -16,6 +17,16 @@ def files_in_tree(path,pattern):
         fileA.append(fn)
   return fileA  
 
+def build_tstT(fn, test_descript, epoch):
+  tstT = {}
+
+  for idx, v in enumerate(test_descript.get('tests',[]))
+    tst         = Tst(v, fn, test_descript, epoch, idx)
+    ident       = tst.get('id')
+    tstT[ident] = tst
+
+  return tstT
+
 class FindTests(BaseTask):
   def __init__(self,name):
     BaseTask.__init__(self, name)
@@ -27,7 +38,6 @@ class FindTests(BaseTask):
     if (len(pargs) < 1):
       pargs.append(".")
     
-
     
     for v in pargs:
       if (os.path.isfile(v) and fnmatch(v,"*.desc")):
@@ -38,8 +48,19 @@ class FindTests(BaseTask):
           self.read_test_descript(fn)
 
   def read_test_descript(fn):
-    masterTbl    = MasterTbl()
-    epoch        = masterTbl['epoch']
-    testdescript = 
+    masterTbl     = MasterTbl()
+    epoch         = masterTbl['epoch']
+    candidateTstT = masterTbl['candidateTstT']
 
+    dbg.print("Found: ",fn,"\n")
+
+    exec(open(fn).read())
+    
+
+    tstT = build_tstT(fn, test_descript, epoch)
+
+    for ident in tstT:
+      candidateTstT[ident] = tstT[ident]
+    
+    
     

@@ -2,14 +2,19 @@ from __future__ import print_function
 from BaseTask   import BaseTask
 from Dbg        import Dbg
 from time       import localtime
-import os, sys, imp, platform
+import os, sys, imp, platform, re
 
 master = {}
 
 dbg = Dbg()
 
+bad_charPat = re.compile('[ &\'"!(){}@#\]]')
+
 def MasterTbl():
   return master
+
+def fix_filename(fn):
+  return bad_charPat.sub("_",fn)
 
 def __print_tool(prefix, *a):
   sA = []

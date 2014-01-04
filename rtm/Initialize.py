@@ -23,6 +23,7 @@ class Initialize(BaseTask):
     masterTbl['version']       = 'Themis ' + version.name()
     masterTbl['currentEpoch']  = time.time()
     masterTbl['origEpoch']     = masterTbl['currentEpoch']
+    masterTbl['target']        = os.environ.get("TARG_SUMMARY") or ""
     masterTbl['errors']        = 0
     masterTbl['diffCount']     = 0
     masterTbl['failCount']     = 0
@@ -36,6 +37,8 @@ class Initialize(BaseTask):
     #------------------------------------------------------------
     # Setup gauntlet
 
-    masterTbl['gauntlet'] = None
+    # masterTbl['gauntlet'] = None --> for later
 
-    
+    masterTbl['candidateTsts'] = {}
+    masterTbl['tstT'] = {}
+    masterTbl['rptT'] = {}

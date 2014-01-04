@@ -14,8 +14,7 @@ def taskMain():
   # Select Test
   task("SelectTests")
   
-  # Create dir and initial reports
-  task("CreateTestReportDir")
+  # Create initial reports
   task("CreateTestReport")
 
   # Do the work and..
