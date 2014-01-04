@@ -3,7 +3,7 @@
 from __future__ import print_function
 import re
 
-class BeautifulTbl:
+class BeautifulTbl(object):
   def __init__(self, **kwargs):
     self.__gap      = kwargs.get("gap",        2)
     self.__column   = kwargs.get("column",     0)

@@ -1,6 +1,7 @@
 from __future__ import print_function
 from BaseTask   import BaseTask
 from Dbg        import Dbg
+from time       import localtime
 import os, sys, imp, platform
 
 master = {}
@@ -26,6 +27,12 @@ def Error(*a):
   __print_tool("Error: ",*a)
   sys.exit(-1)
 
+def full_date_string(epoch):
+  ymd = localtime(epoch)
+  s   = '{:}_{:02}_{:02}_{:02}_{:02}_{:02}'.format(ymd.tm_year, ymd.tm_mon, ymd.tm_mday,
+                                                   ymd.tm_hour, ymd.tm_min, ymd.tm_sec)
+  return s
+
 def get_platform():
   unameA  = platform.uname()
   nameA   = ('system', 'node', 'release', 'version', 'machine', 'processor')
@@ -34,8 +41,12 @@ def get_platform():
   if (targ_summary):
     unameT['targ_summary'] = targ_summary
 
+  unameT['os_mach'] = unameT['system']-unameT['machine']
+
+
   for idx in xrange(len(nameA)):
     unameT[nameA[idx]] = unameA[idx]
+
   return unameT
 
 
