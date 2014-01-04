@@ -94,6 +94,10 @@ passed   R  0.095  mgf/rt/Petsc/s/thermal0/thermal0/t1
         }
     print("testresults['Hermes_version']: ", testresults['Hermes_Version'])
 
+    whole = testresults['HumanData']
+
+    testresults['HumanData'] = whole.split('\n')
+
     print(json.dumps(testresults, sort_keys=True,
                      indent=2, separators=(',', ': ')))
 if ( __name__ == '__main__'): main()
