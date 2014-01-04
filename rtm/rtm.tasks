@@ -1,0 +1,30 @@
+# -*- python -*-
+from __future__ import print_function
+from Engine     import MasterTbl, Error
+
+def taskMain():
+  masterTbl = MasterTbl()
+  task("CmdLineOptions")
+  task("ReadProject")
+  task("Initialize")
+
+  # Get all Tests
+  task("FindTests")
+  
+  # Select Test
+  task("SelectTests")
+  
+  # Create dir and initial reports
+  task("CreateTestReportDir")
+  task("CreateTestReport")
+
+  # Do the work and..
+  task("RunActiveTests")
+  task("AnalyzeTests")
+
+  # Report results: human and testreport.json
+  task("ReportResults")
+  
+  # done!
+      
+  
