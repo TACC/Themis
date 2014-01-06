@@ -16,7 +16,20 @@ def find_py_file(name):
 
 class JobSubmitBase(object):
   def __init__(self)
-    pass
+    self.__funcT = {
+      'CWD'    : self.CWD,
+      'findcmd': self.findcmd,
+      'mpr'    : self.mpr,
+      'queue'  : self.queue,
+      'submit' : self.submit,
+    }
+      
+  def has_function(self, name):
+    return name in self.__funcT
+
+  def funcT(self, name, argA, argT, envTbl, funcTbl):
+    bound = self.__funcT[name].__get__(self, type(self))
+    bound(argA, argT, envTbl, funcTbl)
 
   def batchTbl():
     return self.__batchTbl
@@ -84,10 +97,15 @@ class JobSubmitBase(object):
     print(self.formatMsg(self, messageStr, iTest, masterTbl['passed'],
                            masterTbl['failed'], num_tests, ident)),msgExtra)
       
-  def findcmd(tbl):
+
+  def CWD(argA, argT, envTbl, funcTbl):
+    batchTbl = self.batchTbl()
+    return batchTbl['CurrentWD']
+
+  def findcmd(argA, argT, envTbl, funcTbl):
     result = None
-    cmd  = tbl.cmd;
-    pathA = split(tbl.path or os.environ['path'] or "", ":")
+    cmd  = argT.get('cmd',"")
+    pathA = split(argT.get('path') or os.environ.get('PATH',""), ":")
     for path in pathA:
       fn = os.path.join(path, cmd)
       if (os.path.exists(fn)):
@@ -96,22 +114,15 @@ class JobSubmitBase(object):
       
     return fn
 
-  def mpr(tbl, envTbl, funcTbl):
+  def mpr(argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
-    stencil  = Stencil(tbl=tbl, envTbl=envTbl, funcTbl=funcTbl)
+    stencil  = Stencil(argA = argA, argT=argT, envTbl=envTbl, funcTbl=funcTbl)
     return stencil.expand(batchTbl['mprCmd'])
 
-  def CWD(tbl, envTbl, funcTbl):
-    batchTbl = self.batchTbl()
-    return batchTbl['CurrentWD']
+  def queue(argA, argT, envTbl, funcTbl):
+    return ""
 
-  def submit(tbl, envTbl, funcTbl):
+  def submit(argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
-    stencil  = Stencil(tbl=tbl, envTbl=envTbl, funcTbl=funcTbl)
+    stencil  = Stencil(argA = argA, argT=argT, envTbl=envTbl, funcTbl=funcTbl)
     return stencil.expand(batchTbl['submitHeader'])
-  
-
-
-    
-    
-    

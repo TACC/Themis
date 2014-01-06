@@ -23,7 +23,8 @@ class StencilException(Exception):
       
 
 class Stencil(object):
-  def __init__(self, tbl={}, envTbl={}, funcTbl={}):
+  def __init__(self, argA = [], tbl={}, envTbl={}, funcTbl={}):
+    self.__argA  = argA
     self.__tbl   = tbl
     self.__envT  = envTbl
     self.__funcT = funcTbl
@@ -98,8 +99,8 @@ class Stencil(object):
           qidx = ja
           q    = c
         elif (c == q):
-          rA.append(s[qIdx+1:ja])
-          qIdx = None
+          rA.append(s[qidx+1:ja])
+          qidx = None
           q    = None
       elif (c == ',' and q == None):
         rA.append(s[idx:ja])
@@ -112,6 +113,7 @@ class Stencil(object):
     return key, argA, argT
     
   def expand(self, s):
+    argA  = self.__argA
     tbl   = self.__tbl
     envT  = self.__envT
     funcT = self.__funcT
@@ -127,9 +129,8 @@ class Stencil(object):
       sA.append(s[0:ja])
       q               = s[ja+2:jb-1]
       key, argA, argT = self.__find_key_args(self.expand(q))
-      func            = funcT.get(key)
-      if (func != None):
-        v = func(argA, argT, envT, funcT)
+      if (funcT and funcT.has_function(key)):
+        v = funcT.funcT(key, argA, argT, envT, funcT)
       else:
         v = tbl.get(key) or envT.get(key) or os.environ.get(key)
       if (v == None):
@@ -144,9 +145,9 @@ def main():
   tbl = { 'a' : 'A', 'b' : "BB", 'c' : 'CCC', 'd' : '$(b)' }
 
   sA = [
+    "Now is the time for $(a) to be replaced with $(b) asasdf $(d) asdklj",
     "Now is the time for $(a(()) to be replaced with $(b) asasdf $(d) asdklj",
     "Now is the time for $(aa) to be replaced with $(b) asasdf $(d) asdklj",
-    "Now is the time for $(a) to be replaced with $(b) asasdf $(d) asdklj",
   ]
 
 
@@ -164,7 +165,7 @@ def main():
   print("\nShow erroring out:")
 
   try: 
-    ss = stencil.expand(sA[0])
+    ss = stencil.expand(sA[2])
   except Exception as e:    
     sys.exit(-1)
 

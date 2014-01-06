@@ -1,6 +1,9 @@
 from JobSubmitBase import JobSubmitBase
 
 class Interactive(JobSubmitBase):
+  def __init__(self):
+    JobSubmitBase.__init__(self)
+
   def runtest(self, *kw):
     sA = []
     sA.append("./" + kw['scriptFn'])
@@ -11,8 +14,4 @@ class Interactive(JobSubmitBase):
       sA.append("&")
 
     s = " ".join(sA)
-    os.execute(s)
-
-  def queue(tbl, envTbl, funcTbl)
-    return ""
-  
+    os.system(s)

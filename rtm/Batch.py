@@ -1,12 +1,14 @@
 from JobSubmitBase import JobSubmitBase
 
 class Batch(JobSubmitBase):
+  def __init__(self):
+    JobSubmitBase.__init__(self)
 
-  def queue(tbl, envTbl, funcTbl):
+  def queue(argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
     queueT   = batchTbl['queueTbl']
-    return queueT.get('name') or tbl['name'] or ""
-
+    name     = argT.get('name',"") 
+    return queueT.get(name) or name
 
   def runtest(self, *kw):
     masterTbl = self.masterTbl
@@ -21,8 +23,6 @@ class Batch(JobSubmitBase):
     sA.append("2>&1 < /dev/null")
 
     s = " ".join(sA)
-    os.execute(s)
+    os.system(s)
 
-  def queue(*kw):
-    return ""
   
