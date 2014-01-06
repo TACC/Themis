@@ -27,6 +27,7 @@ class Initialize(BaseTask):
     masterTbl['errors']        = 0
     masterTbl['diffCount']     = 0
     masterTbl['failCount']     = 0
+    masterTbl['resultMaxLen']  = 12
 
     #------------------------------------------------------------
     # Add projectDir to PYTHONPATH for user functions

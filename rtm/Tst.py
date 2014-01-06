@@ -33,7 +33,6 @@ class Tst(object):
     self.idtag             = ident
     self.start_epoch       = -1
     self.runtime           = -1
-    self.job_submit_method = test_descript.get('job_submit_method') or False
     self.str_runtime       = "***"
     self.result            = 'notrun'
     self.active            = True
@@ -53,14 +52,20 @@ class Tst(object):
     self.start_time        = -1
     self.end_time          = -1
     self.background        = False
+    self.runInBackground   = False
     self.at_top_of_script  = "#!/bin/bash\n# -*- shell-script -*-\n"
-  
 
     self.setup_output_dir_names(epoch, target)
     active = test_descript.get('active')
     if (active != None):
       self.active = active
 
+    submit_method = test_descript.get('job_submit_method') or "INTERACTIVE"
+
+    if   (masterTbl['batch_flg']):
+      submit_method = "BATCH"
+
+    self.job_submit_method = submit_method
     keywordT               = {}
     for key in test_descript.get('keywords') or []
       keywordT[key] = True
@@ -98,12 +103,15 @@ class Tst(object):
     )
 
    return fieldA
- def test_result_values(self):
-   valueT = {
+
+ 
+  @staticmethod
+  def test_result_values():
+    valueT = {
       'notrun' : 1, 'notfinished' : 2, 'failed'   : 3,
       'diff'   : 4, 'passed'      : 5, 'inactive' : 6
-   }
-   return valueT
+    }
+    return valueT
 
  def get(self, key):
    return self.__dict__.get(key) or self.test_descript.get(key,"")

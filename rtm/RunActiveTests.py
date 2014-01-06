@@ -3,7 +3,7 @@ from BaseTask   import BaseTask
 from Engine     import MasterTbl, Error, fix_filename
 from Dbg        import Dbg
 from Tst        import Tst
-import os, json
+import os, json, time
 
 comment_block = """
    Test Results:
@@ -77,7 +77,7 @@ class RunActiveTests(BaseTask):
       write_table(resultFn,  resultTbl['notrun'])
       write_table(runtimeFn, runtimeT)
 
-  def run_test(masterTbl, tst, i, num_tests):
+  def run_test(masterTbl, tst, iTest, num_tests):
     fn_envA = ['testDir', 'outputDir', 'resultFn',   'testdescriptFn',
                'cmdResultFn', 'messageFn', 'runtimeFn']
     envA    = ('idtag',   'test_name',  'packageName', 'packageDir',
@@ -92,6 +92,38 @@ class RunActiveTests(BaseTask):
 
     envTbl['projectDir'] = masterTbl['projectDir']
      
-  
+    job_submit_method = tst.get('job_submit_method')
 
-   
+    job = JobSubmitBase.build(job_submit_method, masterTbl)
+
+    run_script = tst.expand_run_script(envTbl, job)
+
+    cwd = os.getcwd()
+    os.chdir(envTbl['outputDir'])
+
+
+    resultFn = fullFn(tst.get('resultFn'))
+
+    write_table(resultFn, resultTbl['started'])
+
+    stime = { 'start_time' : time.time(), 'end_time' : -1 }
+    runtimeFn = fullFn(tst.get('runtimeFn'))
+    write_table(runtimefn, stime)
+
+    idtag    = tst.get('idtag')
+    scriptFn = idtag + ".script"
+    f        = open(scriptFn,"w")
+    f.write(tst.top_of_script())
+    f.write(run_script)
+    f.close()
+
+    os.chmod(scriptFn,"+x")
+    ident      = tst.get('id')
+    background = tst.get('background') or (job_submit_method == "BATCH")
+    tst.set('runInBackground', background)
+
+    job.msg('Started', iTest, num_test, ident, envTbl['resultFn'], background)
+    job.runtest(scriptFn = scriptFn, idtag = idtag, background = background)
+    job.msg('Finished', iTest, num_tests, ident, envTbl['resultFn'], background)
+
+    os.chdir(cwd)
