@@ -1,0 +1,17 @@
+Here are some questions about making rtm work w/python.
+
+* How to do capture?
+** TermWidth
+** stdout, stderr connected to a terminal?
+
+* Factory
+I seem to remember something about using apply as part of a factory.
+
+* funcTbl:
+  the JobSubmit object has to be callable via strings.  In other
+  words, functions in Job like CWD and submit, have to be callable
+  from inside runscript.
+
+* @staticmethod
+   What is up with this?
+
