@@ -1,8 +1,6 @@
 from __future__  import print_function
 from Dbg         import Dbg
 from Tst         import Tst
-from Interactive import Interactive
-from Batch       import Batch
 from Stencil     import Stencil
 import os, sys, time, json
 
@@ -11,11 +9,11 @@ dbg = Dbg()
 def find_py_file(name):
   for path in sys.path:
     fn = os.path.join(path, name)
-    if (os.isfile(fn)):
+    if (os.path.isfile(fn)):
       return fn
 
 class JobSubmitBase(object):
-  def __init__(self)
+  def __init__(self, masterTbl):
     self.__funcT = {
       'CWD'    : self.CWD,
       'findcmd': self.findcmd,
@@ -23,6 +21,26 @@ class JobSubmitBase(object):
       'queue'  : self.queue,
       'submit' : self.submit,
     }
+    self.__masterTbl  = masterTbl
+    self.resultMaxLen = masterTbl['resultMaxLen']
+    baseFn    = find_py_file("DefaultSystems.py")
+    derivedFn = find_py_file("Systems.py")
+    
+    exec(open(baseFn).read())
+    exec(open(derivedFn).read())
+
+    self.__batchTbl = {}
+    batch_hostname = os.environ.get("BATCH_HOSTNAME","INTERACTIVE")
+    if (batch_hostname == "INTERACTIVE"):
+      self.__batchTbl = DefaultSystems['INTERACTIVE']
+    else:
+      for k in Systems:
+        if (batch_hostname in Systems[k]):
+          self.__batchTbl = DefaultSystems[k].copy()
+          self.__batchTbl.update(Systems[k][batch_hostname])
+    
+    if (not self.__batchTbl):
+      Error("Unable to find BatchSystems entry for ",batch_hostname)
       
   def has_function(self, name):
     return name in self.__funcT
@@ -35,57 +53,35 @@ class JobSubmitBase(object):
     return self.__batchTbl
 
 
-  def build(self, name, masterTbl, batch_hostname=None):
-    self.masterTbl    = masterTbl
-    self.resultMaxLen = masterTbl['resultMaxLen']
-
-    batch_hostname = batch_hostname or "INTERACTIVE"
+  @staticmethod
+  def build(name, masterTbl):
     if (name.lower() == "interactive"):
       obj = Interactive(masterTbl)
     else:
       obj = Batch(masterTbl)
-
-    baseFn    = find_py_file("DefaultSystems.py")
-    derivedFn = find_py_file("Systems.py")
-    
-    exec(open(baseFn).read())
-    exec(open(derivedFn).read())
-
-    self.__batchTbl = {}
-    if (batch_hostname == "INTERACTIVE"):
-      self.__batchTbl = DefaultSystems['INTERACTIVE']
-    else:
-      for k in Systems:
-        if (batch_hostname in Systems[k]):
-          self.__batchTbl = DefaultSystems[k].copy()
-          self.__batchTbl.update(Systems[k][batch_hostname])
-    
-    if (not self.__batchTbl):
-      Error("Unable to find BatchSystems entry for ",batch_hostname)
-
     return obj
 
-  def formatMsg(self, result, iTest, passed, failed, num_tests, ident)
+  def formatMsg(self, result, iTest, passed, failed, num_tests, ident):
     blank    = " "
     r        = result or "failed"
-    blankLen = self.resultMaxLen - r:len()
+    blankLen = self.resultMaxLen - len(r)
     msg      = "{}{} : {} tst: {}/{} P/F: {}:{}, {}".format(
                            blank*(blankLen),
                            result,
-                           date("%X"),
+                           time.strftime("%X",time.localtime(time.time())),
                            iTest, num_tests,
                            passed, failed,
                            ident)
 
     return msg
 
-  def msg(self, messageStr, iTest, num_tests, ident, resultFn, background)
-    masterTbl = self.masterTbl
+  def msg(self, messageStr, iTest, num_tests, ident, resultFn, background):
+    masterTbl = self.__masterTbl
     msgExtra = ""  
     if (messageStr != "Started" and not background):
       msgExtra = "\n"  
       resultT  = json.loads(open(resultFn).read())
-      myResult = resultT.testresult
+      myResult = resultT['testresult']
 
       if (myResult == "passed"):
         masterTbl['passed'] += 1
@@ -94,8 +90,8 @@ class JobSubmitBase(object):
 
       messageStr = myResult
 
-    print(self.formatMsg(self, messageStr, iTest, masterTbl['passed'],
-                           masterTbl['failed'], num_tests, ident)),msgExtra)
+    print(self.formatMsg(messageStr, iTest, masterTbl['passed'],
+                         masterTbl['failed'], num_tests, ident), msgExtra)
       
 
   def CWD(argA, argT, envTbl, funcTbl):
@@ -126,3 +122,46 @@ class JobSubmitBase(object):
     batchTbl = self.batchTbl()
     stencil  = Stencil(argA = argA, argT=argT, envTbl=envTbl, funcTbl=funcTbl)
     return stencil.expand(batchTbl['submitHeader'])
+
+class Batch(JobSubmitBase):
+  def __init__(self, masterTbl):
+    JobSubmitBase.__init__(self, masterTbl)
+
+  def queue(argA, argT, envTbl, funcTbl):
+    batchTbl = self.batchTbl()
+    queueT   = batchTbl['queueTbl']
+    name     = argT.get('name',"") 
+    return queueT.get(name) or name
+
+  def runtest(self, **kw):
+    masterTbl = self.__masterTbl
+    batchTbl  = self.batchTbl()
+    logFileNm = masterTbl.get('batchLog') or tbl['idtag'] + ".log"
+
+    sA = []
+    sA.append(batchTbl.get('submitCmd') or "")
+    sA.append(kw['scriptFn'])
+    sA.append(">>")
+    sA.append(logFileFn)
+    sA.append("2>&1 < /dev/null")
+
+    s = " ".join(sA)
+    os.system(s)
+
+
+class Interactive(JobSubmitBase):
+  def __init__(self, masterTbl):
+    JobSubmitBase.__init__(self, masterTbl)
+
+  def runtest(self, **kw):
+    sA = []
+    sA.append("./" + kw['scriptFn'])
+    sA.append(">")
+    sA.append(kw['idtag'] + ".log")
+    sA.append("2>&1 < /dev/null")
+    if (kw['background']):
+      sA.append("&")
+
+    s = " ".join(sA)
+    os.system(s)
+      

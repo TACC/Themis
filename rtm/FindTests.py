@@ -61,9 +61,6 @@ class FindTests(BaseTask):
 
     exec(open(fn).read())
     
-    for k in test_descript:
-      print(k)
-
     tstT = build_tstT(fn, test_descript, epoch)
 
     for ident in tstT:

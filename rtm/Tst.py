@@ -22,11 +22,12 @@ class Tst(object):
     pattern    = re.compile(patternStr)
     m = pattern.search(fn)
 
-    base_id   = m.group(1)
-    tst_dir   = os.path.dirname(base_id) or "./"
+    base_id    = m.group(1)
+    test_dir   = os.path.dirname(base_id) or "./"
     
-    ident     = testparams.get('id')
-    test_name = test_descript.get("test_name")
+    ident      = testparams.get('id')
+    test_name  = test_descript.get("test_name")
+    target     = masterTbl['target']
 
     self.valid_name("id",        ident)
     self.valid_name("test_name", test_name)
@@ -37,21 +38,31 @@ class Tst(object):
     self.idtag             = ident
     self.start_epoch       = -1
     self.runtime           = -1
-    self.str_runtime       = "***"
+    self.strRuntime        = "***"
     self.result            = 'notrun'
     self.active            = True
-    self.test_dir          = tst_dir
+    self.testDir           = test_dir
     self.testdescript_fn   = base_id + '.desc'
     self.testName          = fix_filename(test_name)
+    self.packageName       = masterTbl['packageName']
     self.packageDir        = masterTbl['packageDir']
-    self.parent_dir        = os.path.join(test_dir, idtag)
+    self.parent_dir        = os.path.join(test_dir, ident)
     self.prog_version      = ""
     self.message           = ""
-    self.os_name           = ""
-    self.mach_name         = ""
+    self.os_mach           = ""
+    self.machine           = ""
+    self.version           = ""
+    self.release           = ""
+    self.processor         = ""
+    self.targ_summary      = ""
+    self.node              = ""
+    self.system            = ""
+    self.T0                = ""
+    self.T1                = ""
+    self.TT                = ""
     self.hostname          = ""
-    self.target            = masterTbl['target']
-    self.TARGET            = masterTbl['target']
+    self.target            = target
+    self.TARGET            = target
     self.start_time        = -1
     self.end_time          = -1
     self.background        = False
@@ -77,7 +88,6 @@ class Tst(object):
     self.np = self.test.get('np') or 1
     
   def valid_name(self,key, value):
-    dbg.print("key: ", key, ", value: ", value,"\n")
     m = bad_charPat.search(value)
     if (m):
       Error(key, ": \"",name,"\" has an illegal character: '",m.group(),"'",
@@ -92,16 +102,16 @@ class Tst(object):
 
     uuid           = prefix + full_date_string(epoch) + '-' + masterTbl['os_mach']
     self.uuid      = uuid
-    self.outputDir = os.path.join(self.parent_dir,uuid + '-' + self.test_name)
-    self.resultFn  = os.path.join(self.outputDir, self.idtag + "result")
-    self.runtimeFn = os.path.join(self.outputDir, self.idtag + "runtime")
+    self.outputDir = os.path.join(self.parent_dir,uuid + '-' + self.testName)
+    self.resultFn  = os.path.join(self.outputDir, self.idtag + ".result")
+    self.runtimeFn = os.path.join(self.outputDir, self.idtag + ".runtime")
     self.versionFn = os.path.join(self.outputDir, 'version.lua')
     self.messageFn = os.path.join(self.outputDir, 'message.lua')
 
   @staticmethod
-  def test_fields(self):
+  def test_fields():
     fieldA = (
-      "id", "idTag", "start_epoch", "runtime", "result", "active", "report" , "strRuntime",
+      "id", "idtag", "start_epoch", "runtime", "result", "active", "report" , "strRuntime",
       "outputDir", "testName", "reason", "uuid", "resultFn", "runtimeFn", "cmdResultFn",
       "versionFn","osName","machName","hostName","target","ProgVersion","message","tag",
       "userActive"
@@ -157,10 +167,10 @@ class Tst(object):
 
     aa = []
     for k in envTbl:
-      aa.append("export " + k + "=\"" + envTbl[k])
+      aa.append("export " + k + "=\"" + envTbl[k]+"\"")
 
 
-    mark  = false
+    mark  = False
     a     = []
     aaa   = []
 
@@ -175,14 +185,9 @@ class Tst(object):
         aaa.append(line)
 
     sA = []
-    sA.append("\n",a)
-    sA.append("\n",aa)
-    sA.append("\n",aaa)
-    return "\n".join(sA)
-   
-    
-            
-    
+    sA.append("\n".join(a))
+    sA.append("\n".join(aa))
+    sA.append("\n".join(aaa))
+    s = "\n".join(sA)
 
-    
-  
+    return s

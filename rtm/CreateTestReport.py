@@ -17,13 +17,13 @@ class CreateTestReport(BaseTask):
     epoch     = masterTbl['origEpoch']
     prefix = ""
 
-    if (target != "") then
+    if (target != "") :
       prefix = target + '-'
 
-    uuid          = prefix + full_date_string(epoch) + '-' masterTbl['os_mach']
+    uuid          = prefix + full_date_string(epoch) + '-' + masterTbl['os_mach']
     tst_report_fn = os.path.join(masterTbl['testReportDir'],
                                  uuid + masterTbl['testRptExt'])
-    masterTbl'tstReportFn'] = tst_report_fn
+    masterTbl['tstReportFn'] = tst_report_fn
 
     #--------------------------------------------------------
     #  Do not create a report when there are no tests to run
@@ -38,4 +38,4 @@ class CreateTestReport(BaseTask):
     if (not os.path.exists(dir_name)):
       os.makedirs(dir_name)
 
-    write_table(test_report_fn, test_results)
+    write_table(tst_report_fn, test_results)

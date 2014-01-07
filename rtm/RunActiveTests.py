@@ -1,10 +1,11 @@
-from __future__ import print_function
-from BaseTask   import BaseTask
-from Engine     import MasterTbl, Error, fix_filename
-from Dbg        import Dbg
-from Tst        import Tst
-from util       import write_table
-import os, json, time
+from __future__    import print_function
+from BaseTask      import BaseTask
+from JobSubmitBase import JobSubmitBase
+from Engine        import MasterTbl, Error, fix_filename
+from Dbg           import Dbg
+from Tst           import Tst
+from util          import write_table, fullFn
+import os, json, time, stat
 
 comment_block = """
    Test Results:
@@ -18,20 +19,17 @@ comment_block = """
 resultTbl = {
   'started' : {
     'testresult' : 'notfinished',
-    'comment'    : comment_block,
+    'comment'    : comment_block.split("\n"),
     },
   'notrun' : {
     'testresult' : 'notrun',
-    'comment'    : comment_block,
+    'comment'    : comment_block.split("\n"),
     },
 }
 
-runtimeT = { 'start_time' : -1, 'end_time' : -1 }
+runtimeT = { 'T0' : -1, 'T1' : -1 }
 
 dbg = Dbg()
-def fullFn(projectDir,fn):
-  return fix_filename(os.path.join(projectDir, fn))
-
 
 class RunActiveTests(BaseTask):
   def __init__(self,name):
@@ -60,7 +58,7 @@ class RunActiveTests(BaseTask):
       print("\nFinished Tests\n")
     
 
-  def create_output_dirs(self, projectDir, tstT)
+  def create_output_dirs(self, projectDir, tstT):
 
     for ident in tstT:
       tst       = tstT[ident]
@@ -73,15 +71,16 @@ class RunActiveTests(BaseTask):
       write_table(resultFn,  resultTbl['notrun'])
       write_table(runtimeFn, runtimeT)
 
-  def run_test(masterTbl, tst, iTest, num_tests):
+  def run_test(self, masterTbl, tst, iTest, num_tests):
     fn_envA = ['testDir', 'outputDir', 'resultFn',   'testdescriptFn',
                'cmdResultFn', 'messageFn', 'runtimeFn']
     envA    = ('idtag',   'test_name',  'packageName', 'packageDir',
                'TARGET', 'target', 'tag')
     envTbl  = {}
 
+    projectDir = masterTbl['projectDir']
     for v in fn_envA:
-      envTbl[v] = fix_filename(fullFn(projectDir, tst.get(v)))
+      envTbl[v] = fullFn(projectDir, tst.get(v))
 
     for v in envA:
       envTbl[v] = tst.get(v)
@@ -98,13 +97,13 @@ class RunActiveTests(BaseTask):
     os.chdir(envTbl['outputDir'])
 
 
-    resultFn = fullFn(tst.get('resultFn'))
+    resultFn = fullFn(projectDir, tst.get('resultFn'))
 
     write_table(resultFn, resultTbl['started'])
 
-    stime = { 'start_time' : time.time(), 'end_time' : -1 }
-    runtimeFn = fullFn(tst.get('runtimeFn'))
-    write_table(runtimefn, stime)
+    stime = { 'T0' : time.time(), 'T1' : -1 }
+    runtimeFn = fullFn(projectDir, tst.get('runtimeFn'))
+    write_table(runtimeFn, stime)
 
     idtag    = tst.get('idtag')
     scriptFn = idtag + ".script"
@@ -113,12 +112,13 @@ class RunActiveTests(BaseTask):
     f.write(run_script)
     f.close()
 
-    os.chmod(scriptFn,"+x")
+    st = os.stat(scriptFn)
+    os.chmod(scriptFn,st.st_mode | stat.S_IEXEC)
     ident      = tst.get('id')
     background = tst.get('background') or (job_submit_method == "BATCH")
     tst.set('runInBackground', background)
 
-    job.msg('Started', iTest, num_test, ident, envTbl['resultFn'], background)
+    job.msg('Started', iTest, num_tests, ident, envTbl['resultFn'], background)
     job.runtest(scriptFn = scriptFn, idtag = idtag, background = background)
     job.msg('Finished', iTest, num_tests, ident, envTbl['resultFn'], background)
 

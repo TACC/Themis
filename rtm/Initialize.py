@@ -35,7 +35,10 @@ class Initialize(BaseTask):
     sys.path.append(masterTbl['projectDir'])
     unameT                     = get_platform()
     currentUUID = full_date_string(epoch) + "-" + unameT['os_mach']
+    for k in unameT:
+      masterTbl[k] = unameT[k]
     
+    masterTbl['hostname'] = unameT['machine']
     #------------------------------------------------------------
     # Setup gauntlet
 

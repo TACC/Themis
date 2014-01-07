@@ -9,6 +9,15 @@ dbg = Dbg()
 
 validA = ("passed", "failed", "diff")
 
+comment_block = """
+   Test Results:
+      'notfinished': means that the test has started but not completed.
+      'failed': means that the test has started but not completed.
+      'notrun': test has not started running.
+      'diff'  : Test has run but is different from gold copy.
+      'passed': Test has run and matches gold copy.
+"""
+
 class Finish(BaseTask):
   def __init__(self,name):
     BaseTask.__init__(self, name)
@@ -52,9 +61,9 @@ class Finish(BaseTask):
 
     result     = self.__parse_input_fn(input_fn)
 
-    my_result = { 'testresult' : result }
+    my_result = { 'testresult' : result, "comment" : comment_block.split('\n') }
     f = open(result_fn,"w")
-    f.write(json.dumps(my_result))
+    f.write(json.dumps(my_result, sort_keys=True, indent=2, separators=(', ', ': ')))
     f.close()
 
     if (not os.path.exists(runtime_fn)):

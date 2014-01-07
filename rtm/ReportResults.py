@@ -4,6 +4,7 @@ from Engine          import MasterTbl, Error
 from Dbg             import Dbg
 from Tst             import Tst
 from getTerminalSize import getTerminalSize
+from util            import build_test_reportT, write_table, fullFn
 import os, time
 
 dbg = Dbg()
@@ -15,16 +16,17 @@ class ReportResults(BaseTask):
   def execute(self, *args, **kwargs):
     masterTbl   = MasterTbl()
     rows, width = getTerminalSize()
+    projectDir  = masterTbl['projectDir']
     rptT        = masterTbl['rptT']
-    humanDataA  = ()
+    humanDataA  = []
     tstSummaryT = masterTbl['tstSummaryT']
     totalTime   = time.strftime("%T", time.gmtime(masterTbl['totalTestTime']))
     totalTime  += "{:.02}".format(masterTbl['totalTestTime'] -
                                   int(masterTbl['totalTestTime']))[1:]
     
     
-    testresultsT = Tst.test_results_values()
-    tstSummaryT  = masterTbl['tstSummaryT']
+    testresultT = Tst.test_result_values()
+    tstSummaryT = masterTbl['tstSummaryT']
     
     HDR = "*"*width
     TR  = "*** Test Results"
@@ -58,7 +60,7 @@ class ReportResults(BaseTask):
     humanDataA.append(2)
     humanDataA.append(["Total: ", tstSummaryT['total']])
     for k in tstSummaryT:
-      count = tstSummary[v]
+      count = tstSummaryT[k]
       if (k != "total" and count > 0):
         humanDataA.append([k+":", count])
     humanDataA.append(-2)
@@ -79,13 +81,13 @@ class ReportResults(BaseTask):
       aFlag  = " "
       if (tst.get("active")): aFlag = "R"
       result  = tst.get('result')
-      runtime = tst.get('runtime')
-      rIdx    = str(testresultT.get(result,0))
+      runtime = tst.get('strRuntime')
+      rIdx    = testresultT.get(result,0)
       txt     = " "
       if (result in testresultT):
         resultA.append((rIdx, result, aFlag, runtime,  ident, txt))
     
-    sorted(resultA, key =lambda result: str(10-result[0]) + "-" + result[4])
+    sorted(resultA, key = lambda result: str(10-result[0]) + "-" + result[4])
     
     for v in resultA:
       humanDataA.append(v[1:])
@@ -106,40 +108,49 @@ class ReportResults(BaseTask):
       for ident in rptT:
         tst    = rptT[ident]
         result = tst.get('result')
-        if (result != "passed" and result in testresultT)
-          resultA.append((result, fullFn(tst.get('outputDir'))))
+        if (result != "passed" and result in testresultT):
+          resultA.append((result, fullFn(projectDir, tst.get('outputDir'))))
       sorted(resultA, key = lambda result: result[0] + "-" + result[1])
 
       for v in resultA:
         humanDataA.append(v)
       humanDataA.append(-2)
 
-    humanData = self.formatHumanData(humanDataA)
+    humanData = self.format_human_data(humanDataA)
     if (tstSummaryT['total'] > 0):
       print(humanData)
 
       testreportT = build_test_reportT(humanData, masterTbl)
-      write_table(masterTbl['tstReportFn'), testreportT)
+      write_table(masterTbl['tstReportFn'], testreportT)
       
   def format_human_data(self, humanDataA):
     sA      = []
     blkA    = []
     istart  = 1
     sz      = len(humanDataA)
-    numCols = humanData[0]
+    numCols = humanDataA[0]
 
-    for idx in xrange(sz):
-      v = humanDataA[idx]
-      if (type(v) == int):
-        if (numCol == -v):
+    for idx in xrange(istart, sz):
+      row = humanDataA[idx]
+      if (type(row) == int):
+        if (numCols == -row):
           # Time to build block
-          blkA.append(build_block(sA, numCols))
+          blkA.append(self.build_block(sA, numCols))
           numCols = None
           sA      = []
         else:
-          numCols = v
+          numCols = row
       else:
-        sA.append(v)
+        rowA = []
+        if (type(row) == str):
+          sA.append(row)
+        else:
+          for v in row:
+            if (type(v) != str):
+              v = str(v)
+            rowA.append(v)
+          sA.append(rowA)
+
     return "".join(blkA)
 
   def build_block(self, sA, numCols):
@@ -147,20 +158,22 @@ class ReportResults(BaseTask):
       sA.append("\n")
       return "\n".join(sA)
 
+
+    
+    widthA = []
     for idx in xrange(numCols):
       widthA.append(0)
 
     for row in sA:
       for icol, v in enumerate(row):
-        if (type(v) != str):
-          v = str(v)
-        widthA[icol] = math.max(len(w), widthA[icol])
+        widthA[icol] = max(len(v), widthA[icol])
+        
+    for icol in xrange(numCols):
+      widthA[icol] += 2
           
     aa = []
     for row in sA:
       for icol, v in enumerate(row):
-        if (type(v) != str):
-          v = str(v)
         w = widthA[icol]
         blankLen = w - len(v)
         v = v + " "*blankLen

@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
+from Dbg        import Dbg
 import os, sys, re
 
 fnstrtPat       = re.compile(r'\$\(')
 parenPat        = re.compile(r'[()]')
 wspacePat       = re.compile(r'\s')
 quote_commaPat  = re.compile(r'[\'\",]')
-
+dbg             = Dbg()
 
 class StencilException(Exception):
   def __init__(self, *a):
@@ -135,6 +136,8 @@ class Stencil(object):
         v = tbl.get(key) or envT.get(key) or os.environ.get(key)
       if (v == None):
         raise StencilException("No replacement value for key: \"",key,"\" found\n")
+      if (type(v) != str):
+        v = str(v)
       s = v + s[jb:]
     
     return "".join(sA)
