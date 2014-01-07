@@ -46,12 +46,12 @@ def get_platform():
   if (targ_summary):
     unameT['targ_summary'] = targ_summary
 
-  unameT['os_mach'] = unameT['system']-unameT['machine']
 
 
   for idx in xrange(len(nameA)):
     unameT[nameA[idx]] = unameA[idx]
 
+  unameT['os_mach'] = unameT['system'] + '-' + unameT['machine']
   return unameT
 
 
@@ -139,6 +139,9 @@ class Engine:
     masterTbl['task_searchA']  = (taskDir, os.path.join(themis_project_dir,"lib"))
 
     taskFileName               = os.path.join(taskDir, execName + ".tasks")
+    sys.path.append(taskDir)
+
+
     exec(open(taskFileName).read())
     
     verboseCount = 0

@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-from Engine     import Error, full_date_string, fix_filename
+from Dbg        import Dbg
+from Engine     import MasterTbl, Error, full_date_string, fix_filename
 from Stencil    import Stencil
 import os, sys, re, time
 
 blankPat    = re.compile("\n\s\s*#")
 bad_charPat = re.compile(r'[\'\\ ?/*"[\]]')
+dbg         = Dbg()
 
 class Tst(object):
 
@@ -15,7 +17,9 @@ class Tst(object):
     masterTbl['date'] = time.strftime("%c", time.localtime(epoch))
 
     projectDir = masterTbl['projectDir']
-    pattern    = re.compile("^" + re.escape(projectDir) + "/(.*)\.desc")
+    patternStr = "^" + re.escape(projectDir) + "/(.*)\.desc"
+
+    pattern    = re.compile(patternStr)
     m = pattern.search(fn)
 
     base_id   = m.group(1)
@@ -29,7 +33,7 @@ class Tst(object):
 
     self.test_descript     = test_descript
     self.test              = testparams
-    self.id                = pathjoin(base_id,ident)
+    self.id                = os.path.join(base_id,ident)
     self.idtag             = ident
     self.start_epoch       = -1
     self.runtime           = -1
@@ -37,9 +41,8 @@ class Tst(object):
     self.result            = 'notrun'
     self.active            = True
     self.test_dir          = tst_dir
-    self.testdescript_fn   = baseid + '.desc'
+    self.testdescript_fn   = base_id + '.desc'
     self.testName          = fix_filename(test_name)
-    self.package_name      = masterTbl['packageName']
     self.packageDir        = masterTbl['packageDir']
     self.parent_dir        = os.path.join(test_dir, idtag)
     self.prog_version      = ""
@@ -67,13 +70,14 @@ class Tst(object):
 
     self.job_submit_method = submit_method
     keywordT               = {}
-    for key in test_descript.get('keywords') or []
+    for key in test_descript.get('keywords',[]):
       keywordT[key] = True
     self.keywordT          = keywordT
     
     self.np = self.test.get('np') or 1
     
   def valid_name(self,key, value):
+    dbg.print("key: ", key, ", value: ", value,"\n")
     m = bad_charPat.search(value)
     if (m):
       Error(key, ": \"",name,"\" has an illegal character: '",m.group(),"'",
@@ -102,8 +106,7 @@ class Tst(object):
       "versionFn","osName","machName","hostName","target","ProgVersion","message","tag",
       "userActive"
     )
-
-   return fieldA
+    return fieldA
 
  
   @staticmethod
@@ -114,68 +117,68 @@ class Tst(object):
     }
     return valueT
 
- def get(self, key):
-   return self.__dict__.get(key) or self.test_descript.get(key,"")
+  def get(self, key):
+    return self.__dict__.get(key) or self.test_descript.get(key,"")
 
- def set(self, key, value):
-   result = key in self.__dict__
-   if (not result):
-     Error('Tst.set: Unknown key: "',key,'"')
-   self.__dict__[key] = value
- def has_any_keywords(self, keyA):
-   keyT = self.get("keywords")
-   result = False
-   for v in keyA:
-     if (key in keyT):
-       result = True
-       break
-   return result
+  def set(self, key, value):
+    result = key in self.__dict__
+    if (not result):
+      Error('Tst.set: Unknown key: "',key,'"')
+    self.__dict__[key] = value
+  def has_any_keywords(self, keyA):
+    keyT = self.get("keywords")
+    result = False
+    for v in keyA:
+      if (key in keyT):
+        result = True
+        break
+    return result
 
- def has_all_keywords(self, keyA):
-   keyT = self.get("keywords")
-   result = True
-   for v in keyA:
-     if (not  key in keyT):
-       result = False
-       break
-   return result
+  def has_all_keywords(self, keyA):
+    keyT = self.get("keywords")
+    result = True
+    for v in keyA:
+      if (not  key in keyT):
+        result = False
+        break
+    return result
 
- def top_of_script(self):
-   return self.at_top_of_script
+  def top_of_script(self):
+    return self.at_top_of_script
 
- def expand_run_script(self, envTbl, funcTbl)
-   stencil = Stencil(tbl=self.test, envTbl = envTbl, funcTbl = funcTbl)
-   run_script = self.test_descript.get('run_script')
-   if (not run_script):
-     Error("No run script for test:", self.test_name,"\n")
+  def expand_run_script(self, envTbl, funcTbl):
+    stencil = Stencil(tbl=self.test, envTbl = envTbl, funcTbl = funcTbl)
+    run_script = self.test_descript.get('run_script')
+    if (not run_script):
+      Error("No run script for test:", self.test_name,"\n")
 
-   run_script = stencil.expand(run_script).strip()
-   run_script = blankPat.sub(r"\n#",run_script)
+    run_script = stencil.expand(run_script).strip()
+    run_script = blankPat.sub(r"\n#",run_script)
 
-   aa = []
-   for k in envTbl:
-     aa.append("export " + k + "=\"" + envTbl[k])
+    aa = []
+    for k in envTbl:
+      aa.append("export " + k + "=\"" + envTbl[k])
 
 
-   mark  = false
-   a     = []
-   aaa   = []
+    mark  = false
+    a     = []
+    aaa   = []
 
-   lineA = run_script.split("\n")
+    lineA = run_script.split("\n")
 
-   for line in lineA:
-     if (line[0] != "#"):
-       mark = True
-     if (not mark):
-       a.append(line)
-     else:
-       aaa.append(line)
+    for line in lineA:
+      if (line[0] != "#"):
+        mark = True
+      if (not mark):
+        a.append(line)
+      else:
+        aaa.append(line)
 
-   sA = []
-   sA.append("\n",a)
-   sA.append("\n",aa)
-   sA.append("\n",aaa)
-   return "\n".join(sA)
+    sA = []
+    sA.append("\n",a)
+    sA.append("\n",aa)
+    sA.append("\n",aaa)
+    return "\n".join(sA)
    
     
             

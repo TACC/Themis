@@ -132,8 +132,6 @@ void   write_results(Status s, const char * fn)
 
   t   = time(NULL);
   strftime(buf, bufSize, "%c", localtime(&t));
-  
 
-  fprintf(fp,"# %s\n", buf);
-  fprintf(fp,"%s\n",STbl[s]);
+  fprintf(fp,"# %s\n%s\n", buf,STbl[s]);
 }

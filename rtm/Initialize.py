@@ -15,13 +15,14 @@ class Initialize(BaseTask):
   def execute(self, *args, **kwargs):
     masterTbl                  = MasterTbl()
     version                    = Version()
+    epoch                      = time.time()
     masterTbl['testreportLoc'] = 'testreports'
     masterTbl['testReportDir'] = os.path.join(masterTbl['projectDir'],
                                               masterTbl['testreportLoc'])
     masterTbl['testRptExt']    = '.rtm'
     masterTbl['descriptExt']   = '.desc'
     masterTbl['version']       = 'Themis ' + version.name()
-    masterTbl['currentEpoch']  = time.time()
+    masterTbl['currentEpoch']  = epoch
     masterTbl['origEpoch']     = masterTbl['currentEpoch']
     masterTbl['target']        = os.environ.get("TARG_SUMMARY") or ""
     masterTbl['errors']        = 0
@@ -33,13 +34,13 @@ class Initialize(BaseTask):
     # Add projectDir to PYTHONPATH for user functions
     sys.path.append(masterTbl['projectDir'])
     unameT                     = get_platform()
-    currentUUID = full_date_string() + "-" + unameT['os_mach']
+    currentUUID = full_date_string(epoch) + "-" + unameT['os_mach']
     
     #------------------------------------------------------------
     # Setup gauntlet
 
     # masterTbl['gauntlet'] = None --> for later
 
-    masterTbl['candidateTsts'] = {}
+    masterTbl['candidateTstT'] = {}
     masterTbl['tstT'] = {}
     masterTbl['rptT'] = {}

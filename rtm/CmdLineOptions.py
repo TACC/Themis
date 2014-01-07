@@ -12,7 +12,7 @@ class CmdLineOptions(BaseTask):
 
   def execute(self, *args, **kwargs):
     masterTbl = MasterTbl()
-    usage  = "usage: %prog [options] result.csv"
+    usage  = "usage: %prog [options] [directory] [*.desc]"
     parser = OptionParser(usage)
     parser.add_option('-a', "--analyze", dest="analyze_flg", help="Analyze results.",            action="store_true") 
     parser.add_option('-b', "--batch",   dest="batch_flg",   help="Submit tests to batch queue", action="store_true") 

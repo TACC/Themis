@@ -10,6 +10,11 @@ dbg = Dbg()
 
 def files_in_tree(path,pattern):
   fileA = []
+  wd = os.getcwd()
+  os.chdir(path)
+  path = os.getcwd()
+  os.chdir(wd)
+
   for root, dirs, files in os.walk(path):
     for name in files:
       fn = os.path.join(root, name)
@@ -20,7 +25,7 @@ def files_in_tree(path,pattern):
 def build_tstT(fn, test_descript, epoch):
   tstT = {}
 
-  for idx, v in enumerate(test_descript.get('tests',[]))
+  for idx, v in enumerate(test_descript.get('tests',[])):
     tst         = Tst(v, fn, test_descript, epoch, idx)
     ident       = tst.get('id')
     tstT[ident] = tst
@@ -47,15 +52,17 @@ class FindTests(BaseTask):
         for fn in fileA:
           self.read_test_descript(fn)
 
-  def read_test_descript(fn):
+  def read_test_descript(self, fn):
     masterTbl     = MasterTbl()
-    epoch         = masterTbl['epoch']
+    epoch         = masterTbl['currentEpoch']
     candidateTstT = masterTbl['candidateTstT']
 
     dbg.print("Found: ",fn,"\n")
 
     exec(open(fn).read())
     
+    for k in test_descript:
+      print(k)
 
     tstT = build_tstT(fn, test_descript, epoch)
 

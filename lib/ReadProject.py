@@ -15,4 +15,4 @@ class ReadProject(BaseTask):
     masterTbl = MasterTbl()
     masterTbl['projectDir'] = find_fn_in_dir_tree(os.getcwd(), masterTbl['projectFn'])
     dbg.print("projectDir: ", masterTbl['projectDir'], "\n")
-    
+  
