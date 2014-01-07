@@ -2,8 +2,8 @@ from __future__ import print_function
 from BaseTask   import BaseTask
 from Engine     import MasterTbl, full_date_string
 from Dbg        import Dbg
-from util       import build_test_reportT
-import os, json
+from util       import build_test_reportT, write_table
+import os
 
 dbg = Dbg()
 
@@ -38,7 +38,4 @@ class CreateTestReport(BaseTask):
     if (not os.path.exists(dir_name)):
       os.makedirs(dir_name)
 
-    rpt = json.dumps(test_results, sort_keys=True, indent=2, separators=(',', ': ')))
-    f = open(test_report_fn,"w")
-    f.write(rpt)
-    f.close()
+    write_table(test_report_fn, test_results)

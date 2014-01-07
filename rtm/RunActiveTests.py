@@ -3,6 +3,7 @@ from BaseTask   import BaseTask
 from Engine     import MasterTbl, Error, fix_filename
 from Dbg        import Dbg
 from Tst        import Tst
+from util       import write_table
 import os, json, time
 
 comment_block = """
@@ -31,11 +32,6 @@ dbg = Dbg()
 def fullFn(projectDir,fn):
   return fix_filename(os.path.join(projectDir, fn))
 
-def write_table(fn, t):
-  s = json.dumps(t, sort_keys=True, indent=2, separators=(',', ': '))
-  f = open(resultFn,"w")
-  f.write(s)
-  f.close()
 
 class RunActiveTests(BaseTask):
   def __init__(self,name):

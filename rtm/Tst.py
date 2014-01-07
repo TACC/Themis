@@ -94,6 +94,7 @@ class Tst(object):
     self.versionFn = os.path.join(self.outputDir, 'version.lua')
     self.messageFn = os.path.join(self.outputDir, 'message.lua')
 
+  @staticmethod
   def test_fields(self):
     fieldA = (
       "id", "idTag", "start_epoch", "runtime", "result", "active", "report" , "strRuntime",

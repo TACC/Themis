@@ -1,7 +1,14 @@
 from Tst import Tst
+import json
+
+def write_table(fn, t):
+  s = json.dumps(t, sort_keys=True, indent=2, separators=(',', ': '))
+  f = open(resultFn,"w")
+  f.write(s)
+  f.close()
 
 def build_test_reportT(human_data, masterTbl):
-  test_resultT = {
+  test_reportT = {
     'HumanData'    : human_data:split("\n"),
     'date'         : masterTbl['date'],
     'currentEpoch' : masterTbl['currentEpoch'],
@@ -16,7 +23,7 @@ def build_test_reportT(human_data, masterTbl):
 
   rptT = masterTbl['rptT']
   
-  testA = test_resultT['testA']
+  testA = test_reportT['testA']
 
   for ident in rptT
     tst = rptT[ident]
@@ -25,6 +32,6 @@ def build_test_reportT(human_data, masterTbl):
       test_dataT[key] = tst.get(key)
 
     testA.append(test_dataT)
-  return test_resultT
+  return test_reportT
   
   
