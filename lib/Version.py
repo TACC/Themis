@@ -2,13 +2,12 @@ class Version(object):
   def __init__(self):
     pass
   def tag(self):
-    return "0.1"
+    return "0.2"
   def git(self):
     return "@git@"
   def date(self):
-    return "2013-12-31 22:49"
+    return ""
   def name(self):
-    sA = []
     sA.append(self.tag())
     sA.append(self.git())
     sA.append(self.date())
