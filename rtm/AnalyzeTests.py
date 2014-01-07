@@ -63,10 +63,10 @@ class AnalyzeTests(BaseTask):
         masterTbl['errors'] += 1
 
       if (result == "diff"):
-        masterTbl['diff'] += 1
+        masterTbl['diffCnt'] += 1
 
       if (result == "failed"):
-        masterTbl['failed'] += 1
+        masterTbl['failCnt'] += 1
 
       runtimeFn = fullFn(projectDir, tst.get('runtimeFn'))
       runtimeT = json.loads(open(runtimeFn).read())

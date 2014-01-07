@@ -1,0 +1,23 @@
+# -*- python -*-
+
+test_name = "fail_test"
+
+test_descript = {
+   'description' : "a test that fails",
+   'keywords'    : { "single", "other", "key", "words"},
+
+   'active'      : True,
+   'test_name'   : test_name,
+
+   'run_script'  : """
+     PATH=$(projectDir):$PATH;      export PATH
+     testprog $(outputDir)/testprog.soln
+     rm $(outputDir)/testprog.soln
+     diffprog result.csv $(tol) $(testDir)/testprog.gold $(outputDir)/testprog.soln
+     finishTest -o $(resultFn) -t $(runtimeFn) result.csv
+   """,
+
+   'tests' : [
+      { 'id' : 't1', 'tol' : 1.01e-6},
+   ],
+}

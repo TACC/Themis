@@ -21,7 +21,7 @@ class Initialize(BaseTask):
                                               masterTbl['testreportLoc'])
     masterTbl['testRptExt']    = '.rtm'
     masterTbl['descriptExt']   = '.desc'
-    masterTbl['version']       = 'Themis ' + version.name()
+    masterTbl['ThemisVersion'] = 'Themis ' + version.tag()
     masterTbl['currentEpoch']  = epoch
     masterTbl['origEpoch']     = masterTbl['currentEpoch']
     masterTbl['target']        = os.environ.get("TARG_SUMMARY") or ""

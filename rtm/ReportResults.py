@@ -82,12 +82,12 @@ class ReportResults(BaseTask):
       if (tst.get("active")): aFlag = "R"
       result  = tst.get('result')
       runtime = tst.get('strRuntime')
-      rIdx    = testresultT.get(result,0)
+      rIdx    = str(10 - testresultT.get(result,0)) + "_" + ident
       txt     = " "
       if (result in testresultT):
         resultA.append((rIdx, result, aFlag, runtime,  ident, txt))
     
-    sorted(resultA, key = lambda result: str(10-result[0]) + "-" + result[4])
+    resultA = sorted(resultA, key = lambda result: result[0])
     
     for v in resultA:
       humanDataA.append(v[1:])
@@ -110,7 +110,7 @@ class ReportResults(BaseTask):
         result = tst.get('result')
         if (result != "passed" and result in testresultT):
           resultA.append((result, fullFn(projectDir, tst.get('outputDir'))))
-      sorted(resultA, key = lambda result: result[0] + "-" + result[1])
+      resultA = sorted(resultA, key = lambda result: result[0] + "-" + result[1])
 
       for v in resultA:
         humanDataA.append(v)
