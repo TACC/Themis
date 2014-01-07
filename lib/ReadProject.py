@@ -13,8 +13,6 @@ def find_package_name(projectDir, fn):
 
   patternStr  = "^" + re.escape(projectDir) + "/(.*)"
   pattern     = re.compile(patternStr)
-  dbg.print("pattern: ", patternStr, "\n")
-  dbg.print("fn:      ", fn,      "\n")
   m           = pattern.search(fn)
   pathA       = m.group(1).split("/")
   packageName = pathA[0]

@@ -17,6 +17,7 @@ gittag:
 	    echo '  def date(self):'                              >> $(VERSION_SRC); \
             echo '    return "$(VDATE)"'                          >> $(VERSION_SRC); \
 	    echo '  def name(self):'                              >> $(VERSION_SRC); \
+            echo '    sA = []'                                    >> $(VERSION_SRC); \
             echo '    sA.append(self.tag())'                      >> $(VERSION_SRC); \
             echo '    sA.append(self.git())'                      >> $(VERSION_SRC); \
             echo '    sA.append(self.date())'                     >> $(VERSION_SRC); \

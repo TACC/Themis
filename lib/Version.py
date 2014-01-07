@@ -8,6 +8,7 @@ class Version(object):
   def date(self):
     return ""
   def name(self):
+    sA = []
     sA.append(self.tag())
     sA.append(self.git())
     sA.append(self.date())
