@@ -7,7 +7,7 @@ def taskMain():
   task{"ReadProject"}
   task{"CmdLineOptions"}
   task{"Initialize"}
-  task{"FindAllTmFiles"}
+  task{"FindAllFiles"}
   task{"RemoveTestDirs"}
   
 

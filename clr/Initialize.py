@@ -16,7 +16,7 @@ class Initialize(BaseTask):
     masterTbl['testRptLoc']     = "testreports"
     masterTbl['testRptExt']     = ".rtm"
     masterTbl['descriptExt']    = ".desc"
-    masterTbl['testRptRootDir'] = os.path.join(masterTbl.projectDir, masterTbl.testRptLoc)
+    masterTbl['testRptRootDir'] = os.path.join(masterTbl['projectDir'], masterTbl['testRptLoc'])
     platformT                   = get_platform()
 
     masterTbl.os_mach  = platformT['os_mach']
