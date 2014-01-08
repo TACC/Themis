@@ -1,0 +1,14 @@
+# -*- python -*-
+from __future__ import print_function
+from Engine     import MasterTbl
+
+def taskMain():
+  masterTbl = MasterTbl()
+  task{"ReadProject"}
+  task{"CmdLineOptions"}
+  task{"Initialize"}
+  task{"FindAllTmFiles"}
+  task{"RemoveTestDirs"}
+  
+
+

@@ -23,7 +23,15 @@ def taskMain():
 
   # Report results: human and testreport.json
   task("ReportResults")
-  
-  # done!
+
+  iret = 0
+  if (masterTbl['diffCnt'] > 0):
+    iret += 2
+
+  if (masterTbl['failCnt'] > 0):
+    iret += 4
+
+  return iret
+
       
   
