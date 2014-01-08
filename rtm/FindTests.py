@@ -1,26 +1,12 @@
 from __future__ import print_function
 from BaseTask   import BaseTask
-from Engine     import MasterTbl, Error
+from Engine     import MasterTbl, Error, files_in_tree
 from Dbg        import Dbg
 from fnmatch    import fnmatch
 from Tst        import Tst
 import os
 
 dbg = Dbg()
-
-def files_in_tree(path,pattern):
-  fileA = []
-  wd = os.getcwd()
-  os.chdir(path)
-  path = os.getcwd()
-  os.chdir(wd)
-
-  for root, dirs, files in os.walk(path):
-    for name in files:
-      fn = os.path.join(root, name)
-      if (fnmatch(fn,pattern)):
-        fileA.append(fn)
-  return fileA  
 
 def build_tstT(fn, test_descript, epoch):
   tstT = {}

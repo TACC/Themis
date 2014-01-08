@@ -4,11 +4,11 @@ from Engine     import MasterTbl
 
 def taskMain():
   masterTbl = MasterTbl()
-  task{"ReadProject"}
-  task{"CmdLineOptions"}
-  task{"Initialize"}
-  task{"FindAllFiles"}
-  task{"RemoveTestDirs"}
+  task("ReadProject")
+  task("CmdLineOptions")
+  task("Initialize")
+  task("FindAllFiles")
+  task("RemoveTestDirs")
   
 
 

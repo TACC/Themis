@@ -2,6 +2,7 @@ from __future__ import print_function
 from BaseTask   import BaseTask
 from Dbg        import Dbg
 from time       import localtime
+from fnmatch    import fnmatch
 import os, sys, imp, platform, re
 
 master = {}
@@ -15,6 +16,20 @@ def MasterTbl():
 
 def fix_filename(fn):
   return bad_charPat.sub("_",fn)
+
+def files_in_tree(path,pattern):
+  fileA = []
+  wd = os.getcwd()
+  os.chdir(path)
+  path = os.getcwd()
+  os.chdir(wd)
+
+  for root, dirs, files in os.walk(path):
+    for name in files:
+      fn = os.path.join(root, name)
+      if (fnmatch(fn,pattern)):
+        fileA.append(fn)
+  return fileA  
 
 def __print_tool(prefix, *a):
   sA = []

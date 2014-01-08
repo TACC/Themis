@@ -21,9 +21,6 @@ class CmdLineOptions(BaseTask):
 
     (options, args) = parser.parse_args()
 
-    if (len(args) != 1):
-      Error("Incorrect number of arguments: You must have a result file")
-
     for k in options.__dict__:
       masterTbl[k] = options.__dict__[k]
 

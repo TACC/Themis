@@ -1,8 +1,7 @@
 from __future__ import print_function
 from BaseTask   import BaseTask
-from Engine     import MasterTbl, Error
+from Engine     import MasterTbl, Error, files_in_tree
 from Dbg        import Dbg
-from Tst        import Tst
 import os
 
 dbg = Dbg()
@@ -12,7 +11,17 @@ class FindAllFiles(BaseTask):
     BaseTask.__init__(self, name)
 
   def execute(self, *args, **kwargs):
-    masterTbl = MasterTbl()
+    masterTbl         = MasterTbl()
+    test_rpt_root_dir = masterTbl['testRptRootDir']
+    keep              = masterTbl['keep']
     
-
-    self.
+    fileA = files_in_tree(test_rpt_root_dir,"*.rtm")
+    
+    fileA = sorted(fileA)
+    
+    if (keep > 0):
+      del fileA[-keep:]
+      
+    masterTbl['fileA'] = fileA
+    
+    

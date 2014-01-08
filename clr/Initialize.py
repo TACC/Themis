@@ -2,7 +2,6 @@ from __future__ import print_function
 from BaseTask   import BaseTask
 from Engine     import MasterTbl, Error, get_platform
 from Dbg        import Dbg
-from Tst        import Tst
 import os
 
 dbg = Dbg()
@@ -19,9 +18,9 @@ class Initialize(BaseTask):
     masterTbl['testRptRootDir'] = os.path.join(masterTbl['projectDir'], masterTbl['testRptLoc'])
     platformT                   = get_platform()
 
-    masterTbl.os_mach  = platformT['os_mach']
-    masterTbl.hostname = platformT['hostName']
-    masterTbl.target   = platformT['target']
+    masterTbl['os_mach']  = platformT['os_mach']
+    masterTbl['hostname'] = platformT['node']
+    masterTbl['target']   = platformT['targ_summary']
     
     
     
