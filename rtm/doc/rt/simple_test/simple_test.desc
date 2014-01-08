@@ -4,7 +4,7 @@ test_name = "simple_test"
 
 test_descript = {
    'description' : "a simple test",
-   'keywords'    : { "single", "other", "key", "words"},
+   'keywords'    : { "simple", "other", "key", "words"},
 
    'active'      : True,
    'test_name'   : test_name,

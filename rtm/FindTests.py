@@ -27,12 +27,21 @@ class FindTests(BaseTask):
     pargs     = masterTbl['pargs']        
 
     if (len(pargs) < 1):
-      pargs.append(".")
+      restartA = 
+      if (masterTbl['restartA'] or masterTbl['analyze_flg']):
+        self.find_last_rtm(pargs)
+      else:
+        pargs.append(".")
+   
+    
     
     
     for v in pargs:
       if (os.path.isfile(v) and fnmatch(v,"*.desc")):
         self.read_test_descript(v)
+      elif(fnmatch(v,"*.rtm")):
+        self.read_rtm_file(v)
+
       elif (os.path.isdir(v)):
         fileA = files_in_tree(v,"*.desc")
         for fn in fileA:

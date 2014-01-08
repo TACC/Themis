@@ -128,27 +128,32 @@ class Tst(object):
     return valueT
 
   def get(self, key):
-    return self.__dict__.get(key) or self.test_descript.get(key,"")
+    value = self.__dict__.get(key)
+    if (value != None):
+      return value
+    return self.test_descript.get(key,"")
 
   def set(self, key, value):
     result = key in self.__dict__
     if (not result):
       Error('Tst.set: Unknown key: "',key,'"')
     self.__dict__[key] = value
+
+
   def has_any_keywords(self, keyA):
-    keyT = self.get("keywords")
+    keyT = self.get("keywordT")
     result = False
     for v in keyA:
-      if (key in keyT):
+      if (v in keyT):
         result = True
         break
     return result
 
   def has_all_keywords(self, keyA):
-    keyT = self.get("keywords")
+    keyTst = self.get("keywordT")
     result = True
     for v in keyA:
-      if (not  key in keyT):
+      if (not  (v in keyTst)):
         result = False
         break
     return result

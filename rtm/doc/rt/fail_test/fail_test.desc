@@ -4,7 +4,7 @@ test_name = "fail_test"
 
 test_descript = {
    'description' : "a test that fails",
-   'keywords'    : { "single", "other", "key", "words"},
+   'keywords'    : { "fail", "other", "key", "words"},
 
    'active'      : True,
    'test_name'   : test_name,

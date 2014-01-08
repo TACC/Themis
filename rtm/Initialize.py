@@ -1,8 +1,9 @@
-from __future__ import print_function
-from BaseTask   import BaseTask
-from Engine     import MasterTbl, Error, get_platform, full_date_string
-from Dbg        import Dbg
-from Version    import Version
+from __future__   import print_function
+from BaseTask     import BaseTask
+from Engine       import MasterTbl, Error, get_platform, full_date_string
+from Dbg          import Dbg
+from Gauntlet     import Gauntlet, GauntletData
+from Version      import Version
 import os,  time, sys
 
 dbg = Dbg()
@@ -29,6 +30,8 @@ class Initialize(BaseTask):
     masterTbl['diffCount']     = 0
     masterTbl['failCount']     = 0
     masterTbl['resultMaxLen']  = 12
+    masterTbl['minNP']         = 0
+    masterTbl['maxNP']         = sys.maxsize
 
     #------------------------------------------------------------
     # Add projectDir to PYTHONPATH for user functions
@@ -41,6 +44,7 @@ class Initialize(BaseTask):
     masterTbl['hostname'] = unameT['machine']
     #------------------------------------------------------------
     # Setup gauntlet
+    masterTbl['gauntlet'] = Gauntlet(GauntletData())
 
     # masterTbl['gauntlet'] = None --> for later
 
