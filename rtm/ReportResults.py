@@ -172,11 +172,13 @@ class ReportResults(BaseTask):
       widthA[icol] += 2
           
     aa = []
+    ncol1 = numCols - 1 
     for row in sA:
       for icol, v in enumerate(row):
         w = widthA[icol]
         blankLen = w - len(v)
-        v = v + " "*blankLen
+        if (icol < ncol1):
+          v = v + " "*blankLen
         aa.append(v)
       aa.append("\n")
 
