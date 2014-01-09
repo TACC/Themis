@@ -62,7 +62,9 @@ class RunActiveTests(BaseTask):
 
     for ident in tstT:
       tst       = tstT[ident]
-      os.makedirs(fullFn(projectDir, tst.get('outputDir')))
+      my_dir    = fullFn(projectDir, tst.get('outputDir'))
+      if (not os.path.isdir(my_dir)):
+        os.makedirs(my_dir)
 
     for ident in tstT:
       tst       = tstT[ident]

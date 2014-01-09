@@ -41,6 +41,7 @@ class Tst(object):
     self.strRuntime        = "***"
     self.result            = 'notrun'
     self.active            = True
+    self.report            = False
     self.testDir           = test_dir
     self.testdescript_fn   = base_id + '.desc'
     self.testName          = fix_filename(test_name)
@@ -112,9 +113,7 @@ class Tst(object):
   def test_fields():
     fieldA = (
       "id", "idtag", "start_epoch", "runtime", "result", "active", "report" , "strRuntime",
-      "outputDir", "testName", "reason", "uuid", "resultFn", "runtimeFn", "cmdResultFn",
-      "versionFn","osName","machName","hostName","target","ProgVersion","message","tag",
-      "userActive"
+      "outputDir", "testName", "uuid", "resultFn", "runtimeFn", "versionFn", "target","message", 
     )
     return fieldA
 

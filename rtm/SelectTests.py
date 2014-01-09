@@ -29,8 +29,8 @@ class SelectTests(BaseTask):
     if (setNP):
       gauntlet.add("NP", procA)
       
-
     gauntlet.add("keywords", masterTbl['keywordA'])
+    gauntlet.add("restart",  masterTbl['restartA'])
     gauntlet.apply(candidateTstT)
 
     tstT = masterTbl['tstT']
@@ -39,11 +39,12 @@ class SelectTests(BaseTask):
     #-------------------------------------------------------
     #  Only run active tests.
 
+    analyze_flg = masterTbl['analyze_flg']
     for ident in candidateTstT:
-      tst         = candidateTstT[ident]
-      dbg.print("select: id: ", ident, ", active: ", tst.get("active"),"\n")
-
-      if (tst.get('active')):
+      tst = candidateTstT[ident]
+      if (analyze_flg or tst.get('report')):
+        rptT[ident] = tst
+      elif (tst.get('active')):
         tstT[ident] = tst
         rptT[ident] = tst
         

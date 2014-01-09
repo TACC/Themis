@@ -53,7 +53,8 @@ class RemoveTestDirs(BaseTask):
       
       if (len(listA) == 0 or keep == 0):
         dbg.print("rm -rf ",id_dir,"\n")
-        shutil.rmtree(id_dir)
+        if (os.path.isdir(id_dir)):
+          shutil.rmtree(id_dir)
 
     dbg.fini("RemoveTestDirs")
         
