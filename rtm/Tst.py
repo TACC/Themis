@@ -52,6 +52,7 @@ class Tst(object):
     self.message           = ""
     self.os_mach           = ""
     self.machine           = ""
+    self.fn                = fn
     self.version           = ""
     self.release           = ""
     self.processor         = ""

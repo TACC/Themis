@@ -43,7 +43,11 @@ def __print_tool(prefix, *a):
   sA.append("\n")
   sys.stderr.write("".join(sA))
 
-def Warning(*a):
+def to_stderr(prefix, *a):
+  __print_tool(prefix, *a)
+  
+
+def warning(*a):
   __print_tool("Warning: ",*a)
 
 def Error(*a):

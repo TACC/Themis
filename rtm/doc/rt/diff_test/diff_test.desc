@@ -4,15 +4,15 @@ test_name = "diff_test"
 
 test_descript = {
    'description' : "a diff test",
-   'keywords'    : { "diff", "other", "key", "words"},
+   'keywords'    : [ "diff", test_name],
 
    'active'      : True,
    'test_name'   : test_name,
 
    'run_script'  : """
      PATH=$(projectDir):$PATH;      export PATH
-     testprog $(outputDir)/testprog.soln
-     diffprog result.csv $(tol) $(testDir)/testprog.gold $(outputDir)/testprog.soln
+     testprog testprog.soln
+     diffprog result.csv $(tol) $(testDir)/testprog.gold testprog.soln
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,
 
@@ -20,4 +20,3 @@ test_descript = {
       { 'id' : 't1', 'tol' : 1.01e-6},
    ],
 }
-

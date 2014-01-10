@@ -1,11 +1,11 @@
 from __future__    import print_function
 from BaseTask      import BaseTask
 from JobSubmitBase import JobSubmitBase
-from Engine        import MasterTbl, Error, fix_filename
+from Engine        import MasterTbl, Error, fix_filename, to_stderr
 from Dbg           import Dbg
 from Tst           import Tst
 from util          import write_table, fullFn
-import os, json, time, stat
+import os, sys, json, time, stat
 
 comment_block = """
    Test Results:
@@ -93,7 +93,11 @@ class RunActiveTests(BaseTask):
 
     job = JobSubmitBase.build(job_submit_method, masterTbl)
 
-    run_script = tst.expand_run_script(envTbl, job)
+    try:
+      run_script = tst.expand_run_script(envTbl, job)
+    except Exception as e:
+      to_stderr("Problem: ", "Failed to create job script for test file: ",tst.get('fn'),"\n")
+      sys.exit(-1)
 
     cwd = os.getcwd()
     os.chdir(envTbl['outputDir'])

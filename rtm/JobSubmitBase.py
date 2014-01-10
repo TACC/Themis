@@ -47,10 +47,14 @@ class JobSubmitBase(object):
 
   def funcT(self, name, argA, argT, envTbl, funcTbl):
     bound = self.__funcT[name].__get__(self, type(self))
-    bound(argA, argT, envTbl, funcTbl)
+    s = bound(argA, argT, envTbl, funcTbl)
+    return s
 
-  def batchTbl():
+  def batchTbl(self):
     return self.__batchTbl
+
+  def masterTbl(self):
+    return self.__masterTbl
 
 
   @staticmethod
@@ -94,11 +98,11 @@ class JobSubmitBase(object):
                          masterTbl['failed'], num_tests, ident), msgExtra)
       
 
-  def CWD(argA, argT, envTbl, funcTbl):
+  def CWD(self, argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
     return batchTbl['CurrentWD']
 
-  def findcmd(argA, argT, envTbl, funcTbl):
+  def findcmd(self, argA, argT, envTbl, funcTbl):
     result = None
     cmd  = argT.get('cmd',"")
     pathA = split(argT.get('path') or os.environ.get('PATH',""), ":")
@@ -110,39 +114,41 @@ class JobSubmitBase(object):
       
     return fn
 
-  def mpr(argA, argT, envTbl, funcTbl):
+  def mpr(self, argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
-    stencil  = Stencil(argA = argA, argT=argT, envTbl=envTbl, funcTbl=funcTbl)
+    stencil  = Stencil(argA = argA, tbl=argT, envTbl=envTbl, funcTbl=funcTbl)
     return stencil.expand(batchTbl['mprCmd'])
 
-  def queue(argA, argT, envTbl, funcTbl):
+  def queue(self,argA, argT, envTbl, funcTbl):
     return ""
 
-  def submit(argA, argT, envTbl, funcTbl):
+  def submit(self, argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
-    stencil  = Stencil(argA = argA, argT=argT, envTbl=envTbl, funcTbl=funcTbl)
-    return stencil.expand(batchTbl['submitHeader'])
+    stencil  = Stencil(argA = argA, tbl=argT, envTbl=envTbl, funcTbl=funcTbl)
+    s        = stencil.expand(batchTbl['submitHeader'])
+    dbg.print("submit: s:\n",s,"\n")
+    return s
 
 class Batch(JobSubmitBase):
   def __init__(self, masterTbl):
     JobSubmitBase.__init__(self, masterTbl)
 
-  def queue(argA, argT, envTbl, funcTbl):
+  def queue(self, argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
     queueT   = batchTbl['queueTbl']
     name     = argT.get('name',"") 
     return queueT.get(name) or name
 
   def runtest(self, **kw):
-    masterTbl = self.__masterTbl
+    masterTbl = self.masterTbl()
     batchTbl  = self.batchTbl()
-    logFileNm = masterTbl.get('batchLog') or tbl['idtag'] + ".log"
+    logFileNm = masterTbl.get('batchLog') or kw['idtag'] + ".log"
 
     sA = []
     sA.append(batchTbl.get('submitCmd') or "")
     sA.append(kw['scriptFn'])
     sA.append(">>")
-    sA.append(logFileFn)
+    sA.append(logFileNm)
     sA.append("2>&1 < /dev/null")
 
     s = " ".join(sA)

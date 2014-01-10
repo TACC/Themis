@@ -32,7 +32,6 @@ class Stencil(object):
 
 
   def __find_cmd(self, s):
-    dbg.start("Stencil.__find_cmd",s)
     m   = fnstrtPat.search(s)
     if (not m):
       return (None, None)
@@ -57,7 +56,6 @@ class Stencil(object):
         if (iparen == 0):
           break
       idx = jd
-    dbg.fini("Stencil.__find_cmd")
     return (ja, jd)
       
   def __assign_one_arg(self, s, argA, argT):
@@ -71,17 +69,15 @@ class Stencil(object):
 
 
   def __find_key_args(self, s):
-    dbg.start("Stencil.__find_key_args",s)
     argA = []
     argT = {}
 
     s = s.strip()
     m = wspacePat.search(s)
     if (not m):
-      dbg.fini("Stencil.__find_key_args")
       return s, argA, argT
     ja  = m.start()
-    key = s[0:ja-1]
+    key = s[0:ja]
     s   = s[ja:]
 
     ss   = None
@@ -115,12 +111,10 @@ class Stencil(object):
         rA = []
       else:
         rA.append(s[idx:ja])
-      idx = ja
-    dbg.fini("Stencil.__find_key_args")
+      idx = ja + 1
     return key, argA, argT
     
   def expand(self, s):
-    dbg.start("Stencil.expand",s)
     argA  = self.__argA
     tbl   = self.__tbl
     envT  = self.__envT
@@ -130,7 +124,6 @@ class Stencil(object):
     
     while (True):
       ja, jb = self.__find_cmd(s)
-      dbg.print("ja: ", ja, ", jb: ", jb,"\n")
 
       if (ja == None):
         sA.append(s)
@@ -144,12 +137,12 @@ class Stencil(object):
       else:
         v = tbl.get(key) or envT.get(key) or os.environ.get(key)
       if (v == None):
+
         raise StencilException("No replacement value for key: \"",key,"\" found\n")
       if (type(v) != str):
         v = str(v)
       s = v + s[jb:]
     
-    dbg.fini("Stencil.expand")
     return "".join(sA)
     
 def main():
