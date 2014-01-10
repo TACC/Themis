@@ -38,10 +38,16 @@ fi
 
 export PYTHONPATH="$PY_PATH$extra"
 
-# echo projectDir : $projectDir
-# echo PYTHONPATH : $PYTHONPATH
-# echo execDir    : $execDir
-# echo cmdPath    : $cmdPath
+for i in "$@"; do
+  if [ "$i" = "-v" -o "$i" = "-D" ]; then
+    echo "projectDir : $projectDir"
+    echo "PYTHONPATH : $PYTHONPATH"
+    echo "execDir    : $execDir"
+    echo "cmdPath    : $cmdPath"
+    echo
+    break
+  fi
+done
 
 $projectDir/lib/themis.py $projectDir $cmdPath "$@"
 
