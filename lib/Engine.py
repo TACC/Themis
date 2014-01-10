@@ -52,8 +52,8 @@ def Error(*a):
 
 def full_date_string(epoch):
   ymd = localtime(epoch)
-  s   = '{:}_{:02}_{:02}_{:02}_{:02}_{:02}'.format(ymd.tm_year, ymd.tm_mon, ymd.tm_mday,
-                                                   ymd.tm_hour, ymd.tm_min, ymd.tm_sec)
+  s   = "%d_%02d_%02d_%02d_%02d_%02d" % (ymd.tm_year, ymd.tm_mon, ymd.tm_mday,
+                                         ymd.tm_hour, ymd.tm_min, ymd.tm_sec)
   return s
 
 def get_platform():

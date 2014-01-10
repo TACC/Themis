@@ -4,13 +4,13 @@ test_name = "queue_test"
 
 test_descript = {
    'description' : "a simple test",
-   'keywords'    : { "queue", "qtest"},
+   'keywords'    : [ "queue", "qtest"],
 
    'active'      : True,
    'test_name'   : test_name,
 
    'run_script'  : """
-     $(submit JOBNAME="$(testName)-$(id)", NP=$(np), NODES=$(nodes), QUEUE="normal", TIME=00:15:00)
+     $(submit JOBNAME="$(test_name)-$(id)", NP=$(np), NODES=$(nodes), QUEUE="normal", TIME=00:15:00)
      PATH=$(projectDir):$PATH;      export PATH
      testprog $(outputDir)/testprog.soln
      diffprog result.csv $(tol) $(testDir)/testprog.gold $(outputDir)/testprog.soln
