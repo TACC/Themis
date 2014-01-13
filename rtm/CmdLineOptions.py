@@ -31,3 +31,7 @@ class CmdLineOptions(BaseTask):
       masterTbl[k] = options.__dict__[k]
 
     masterTbl['pargs'] = args
+
+    if (masterTbl['inter_flg'] and masterTbl['batch_flg']):
+      Error("Both interactive and batch options set, please chose one and try again!")
+      
