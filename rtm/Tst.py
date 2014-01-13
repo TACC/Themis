@@ -78,7 +78,10 @@ class Tst(object):
 
     submit_method = test_descript.get('job_submit_method') or "INTERACTIVE"
 
-    if   (masterTbl['batch_flg']):
+    if (masterTbl['inter_flg']):
+      submit_method = "INTERACTIVE"
+
+    if (masterTbl['batch_flg']):
       submit_method = "BATCH"
 
     self.job_submit_method = submit_method

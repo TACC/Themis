@@ -14,17 +14,16 @@ class CmdLineOptions(BaseTask):
     masterTbl = MasterTbl()
     usage  = "usage: %prog [options] [directory] [*.desc]"
     parser = OptionParser(usage)
-    parser.add_option('-a', "--analyze", dest="analyze_flg", help="Analyze results.",            action="store_true") 
-    parser.add_option('-b', "--batch",   dest="batch_flg",   help="Submit tests to batch queue", action="store_true") 
-    parser.add_option('-k', "--keyword", dest="keywordA",    help="Keyword(s) to select tests",  action="append")
-    parser.add_option('-r', "--restart", dest="restartA",    help='A restart criteria to select tests to rerun, "-r wrong" will restart all test that did not pass',
-                     action="append")
-    parser.add_option('-m', "--minNP",   dest="minNP",       help="The minimum number of processors that will be run",
-                     action="store")
-    parser.add_option('-x', "--maxNP",   dest="maxNP",       help="The maximum number of processors that will be run",
-                     action="store")
-    parser.add_option('-v', "--verbose", dest="v_count",     help="Verbosity",                   action="count")
-    parser.add_option('-D', "--debug",   dest="d_count",     help="Debug flag",                  action="count")
+    parser.add_option('-a', "--analyze",      dest="analyze_flg", action="store_true", help="Analyze results."            ) 
+    parser.add_option('-b', "--batch",        dest="batch_flg",   action="store_true", help="Submit tests to batch queue" ) 
+    parser.add_option('-i', "--interactive",  dest="inter_flg",   action="store_true", help="Submit tests to batch queue" ) 
+    parser.add_option('-k', "--keyword",      dest="keywordA",    action="append"    , help="Keyword(s) to select tests"  )
+    parser.add_option('-r', "--restart",      dest="restartA",    action="append"    , help='A restart criteria to select ' + \
+                                                         'tests to rerun, "-r wrong" will restart all test that did not pass')
+    parser.add_option('-m', "--minNP",        dest="minNP",       action="store",      help="The minimum number of processors that will be run")
+    parser.add_option('-x', "--maxNP",        dest="maxNP",       action="store",      help="The maximum number of processors that will be run")
+    parser.add_option('-v', "--verbose",      dest="v_count",     help="Verbosity",                   action="count")
+    parser.add_option('-D', "--debug",        dest="d_count",     help="Debug flag",                  action="count")
 
     (options, args) = parser.parse_args()
 

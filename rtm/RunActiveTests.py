@@ -88,8 +88,7 @@ class RunActiveTests(BaseTask):
       envTbl[v] = tst.get(v)
 
     envTbl['projectDir'] = masterTbl['projectDir']
-     
-    job_submit_method = tst.get('job_submit_method')
+    job_submit_method    = tst.get('job_submit_method')
 
     job = JobSubmitBase.build(job_submit_method, masterTbl)
 

@@ -1,12 +1,6 @@
 Here are some questions about making rtm work w/python.
 
-* How to do capture?
-** TermWidth
-** stdout, stderr connected to a terminal?
-
 * Factory
 I seem to remember something about using apply as part of a factory.
 
-* @staticmethod
-   What is up with this?
 

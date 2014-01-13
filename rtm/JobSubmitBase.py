@@ -80,8 +80,12 @@ class JobSubmitBase(object):
     return msg
 
   def msg(self, messageStr, iTest, num_tests, ident, resultFn, background):
+    if (messageStr != "Started" and background):
+      return
+
     masterTbl = self.__masterTbl
-    msgExtra = ""  
+    msgExtra  = ""  
+
     if (messageStr != "Started" and not background):
       msgExtra = "\n"  
       resultT  = json.loads(open(resultFn).read())

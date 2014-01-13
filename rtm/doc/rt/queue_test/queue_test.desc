@@ -3,13 +3,13 @@
 test_name = "queue_test"
 
 test_descript = {
-   'description' : "a simple test",
-   'keywords'    : [ "queue", "qtest", test_name],
+   'job_submit_method' : 'BATCH',
+   'description'       : "a simple test",
+   'keywords'          : [ "queue", "qtest", test_name],
+   'active'            : True,
+   'test_name'         : test_name,
 
-   'active'      : True,
-   'test_name'   : test_name,
-
-   'run_script'  : """
+   'run_script'        : """
      $(submit JOBNAME="$(test_name)-$(id)", NP=$(np), NODES=$(nodes), QUEUE="normal", TIME=00:15:00)
      PATH=$(projectDir):$PATH;      export PATH
      testprog testprog.soln
