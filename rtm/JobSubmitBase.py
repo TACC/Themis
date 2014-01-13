@@ -81,6 +81,7 @@ class JobSubmitBase(object):
 
   def msg(self, messageStr, iTest, num_tests, ident, resultFn, background):
     if (messageStr != "Started" and background):
+      print("")
       return
 
     masterTbl = self.__masterTbl
