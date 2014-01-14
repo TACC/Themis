@@ -8,7 +8,7 @@ dbg = Dbg()
 
 class CmdLineOptions(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(CmdLineOptions, self).__init__(name)
 
   def execute(self, *args, **kwargs):
     masterTbl = MasterTbl()

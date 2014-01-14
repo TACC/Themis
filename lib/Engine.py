@@ -133,7 +133,7 @@ def task(name, *args, **kwargs):
   my_task.execute(*args, **kwargs)
   dbg.fini(name)
   
-class Engine:
+class Engine(object):
 
   def __init__(self):
     pass

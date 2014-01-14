@@ -136,7 +136,7 @@ class JobSubmitBase(object):
 
 class Batch(JobSubmitBase):
   def __init__(self, masterTbl):
-    JobSubmitBase.__init__(self, masterTbl)
+    super(Batch, self).__init__(masterTbl)
 
   def queue(self, argA, argT, envTbl, funcTbl):
     batchTbl = self.batchTbl()
@@ -162,7 +162,7 @@ class Batch(JobSubmitBase):
 
 class Interactive(JobSubmitBase):
   def __init__(self, masterTbl):
-    JobSubmitBase.__init__(self, masterTbl)
+    super(Interactive, self).__init__(masterTbl)
 
   def runtest(self, **kw):
     sA = []

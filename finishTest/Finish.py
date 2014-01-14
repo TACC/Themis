@@ -20,7 +20,7 @@ comment_block = """
 
 class Finish(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(Finish, self).__init__(name)
 
   def __parse_input_fn(self, fn):
 
