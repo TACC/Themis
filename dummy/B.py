@@ -7,7 +7,7 @@ dbg = Dbg()
 
 class B(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(B, self).__init__(name)
 
   def execute(self, *args, **kwargs):
     print(dbg.indent_string(), "In class B", sep = "")

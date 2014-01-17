@@ -10,7 +10,7 @@ dbg = Dbg()
 
 class AnalyzeTests(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(AnalyzeTests, self).__init__(name)
 
   def execute(self, *args, **kwargs):
     masterTbl  = MasterTbl()
@@ -40,9 +40,6 @@ class AnalyzeTests(BaseTask):
 
     for ident in rptT:
       tst = rptT[ident]
-
-      if (tst.get('runInBackground')):
-        continue
 
       resultFn = fullFn(projectDir, tst.get('resultFn'))
 

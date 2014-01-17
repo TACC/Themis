@@ -22,7 +22,7 @@ def build_tstT(fn, test_descript, epoch):
 
 class FindTests(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(FindTests, self).__init__(name)
 
   def execute(self, *args, **kwargs):
     masterTbl = MasterTbl()

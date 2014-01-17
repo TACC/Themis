@@ -1,5 +1,5 @@
 
-class BaseTask:
+class BaseTask(object):
   def __init__(self, name, **kwargs):
     self.__name = name
 

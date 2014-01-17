@@ -11,7 +11,7 @@ dbg = Dbg()
 
 class ReportResults(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(ReportResults, self).__init__(name)
 
   def execute(self, *args, **kwargs):
     masterTbl   = MasterTbl()

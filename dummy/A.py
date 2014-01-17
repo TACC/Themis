@@ -7,7 +7,7 @@ dbg = Dbg()
 
 class A(BaseTask):
   def __init__(self,name):
-    BaseTask.__init__(self, name)
+    super(A, self).__init__(name)
 
   def execute(self, *args, **kwargs):
 
