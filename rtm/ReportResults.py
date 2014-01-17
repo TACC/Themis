@@ -21,8 +21,8 @@ class ReportResults(BaseTask):
     humanDataA  = []
     tstSummaryT = masterTbl['tstSummaryT']
     totalTime   = time.strftime("%T", time.gmtime(masterTbl['totalTestTime']))
-    totalTime  += "{:.02}".format(masterTbl['totalTestTime'] -
-                                  int(masterTbl['totalTestTime']))[1:]
+    totalTime  += ("%.2f" % (masterTbl['totalTestTime'] - 
+                   int(masterTbl['totalTestTime'])))[1:]
     
     
     testresultT = Tst.test_result_values()

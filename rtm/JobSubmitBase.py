@@ -69,7 +69,8 @@ class JobSubmitBase(object):
     blank    = " "
     r        = result or "failed"
     blankLen = self.resultMaxLen - len(r)
-    msg      = "{}{} : {} tst: {}/{} P/F: {}:{}, {}".format(
+   #msg      = "{}{} : {} tst: {}/{} P/F: {}:{}, {}".format(
+    msg      = "%s%s : %s tst: %d/%d P/F: %d:%d, %s" % (
                            blank*(blankLen),
                            result,
                            time.strftime("%X",time.localtime(time.time())),
