@@ -22,34 +22,39 @@ class Finish(BaseTask):
   def __init__(self,name):
     super(Finish, self).__init__(name)
 
-  def __parse_input_fn(self, fn):
+  def __parse_input_fn(self, fnA):
 
-    if (not os.path.exists(fn)):
-      return "failed"
-    
-    f = open(fn)
-    lineA = f.readlines()
-    f.close()
-
-    found  = False
     result = "passed"
 
-    for line in lineA:
-      line = line.strip()
-      if (line[0] == "#" or len(line) < 1):
-        continue
+    for fn in fnA:
+      if (not os.path.exists(fn)):
+        return "failed"
+    
+      f = open(fn)
+      lineA = f.readlines()
+      f.close()
 
-      found = True
-      idx = line.find(",")
-      if (idx > 0):
-        line = line[0:idx]
-      line = line.lower()
-      if (line != "passed"):
-        result = line
+      found  = False
+
+      for line in lineA:
+        line = line.strip()
+        if (line[0] == "#" or len(line) < 1):
+          continue
+
+        found = True
+        idx = line.find(",")
+        if (idx > 0):
+          line = line[0:idx]
+        line = line.lower()
+        if (line != "passed"):
+          result = line
+          break
+
+      
+      if (not result in validA or not found):
+        result = "failed"
         break
-
-    if (not result in validA or not found):
-      result = "failed"
+      
 
     return result
 
@@ -57,9 +62,9 @@ class Finish(BaseTask):
     masterTbl  = MasterTbl()
     result_fn  = masterTbl['result_fn']
     runtime_fn = masterTbl['runtime_fn']
-    input_fn   = masterTbl['pargs'][0]
+    input_fnA  = masterTbl['pargs']
 
-    result     = self.__parse_input_fn(input_fn)
+    result     = self.__parse_input_fn(input_fnA)
 
     my_result = { 'testresult' : result, "comment" : comment_block.split('\n') }
     f = open(result_fn,"w")
