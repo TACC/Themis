@@ -5,7 +5,7 @@ from Engine        import MasterTbl, Error, fix_filename, to_stderr
 from Dbg           import Dbg
 from Tst           import Tst
 from util          import write_table, fullFn
-import os, sys, json, time, stat
+import os, sys, time, stat
 
 comment_block = """
    Test Results:
