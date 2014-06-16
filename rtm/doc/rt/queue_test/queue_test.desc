@@ -6,7 +6,7 @@ test_descript = {
    'job_submit_method' : 'BATCH',
    'description'       : "a simple test",
    'keywords'          : [ "queue", "qtest", test_name],
-   'active'            : True,
+   'active'            : False,
    'test_name'         : test_name,
 
    'run_script'        : """
