@@ -1,0 +1,54 @@
+                 Comparison Tool
+                 ---------------
+                   Robert McLay
+                 
+
+In order to use "rtm" you'll need a comparison tool.  This tool needs
+to take two solution and compare them and report whether they are the
+same or different. It will need to take command line arguments.  The
+arguments can be in any order you wish.  It will need to support at
+least 3 or 4 arguments:
+
+    * the name of the file where the results go.
+    * Optionally the tolerance required for your test.
+    * The name of the solution file(s)/directory
+    * The name of the gold file(s)/directory
+
+As an example, suppose your comparison tool is named "diffprog" which
+takes several arguments:
+
+   $ diffprog results.csv 1.0e-6 gold_file test_file
+
+The first argument is the name of csv file that is required to
+tell rtm how your program did.  The second argument is the norm test
+value.  The final two arguments are the gold file that has the known
+good solution and test file.
+
+The results.lua file looks something like this:
+
+   # Fri Feb 19 16:39:18 2015
+   passed, "Any comment"
+
+The first line is a comment.  The second line is the value.  Your diff
+program should generate something similar. It is important that you
+have all the commas that are shown above.  Obviously, the "passed"
+line should be either "passed", "failed" or "diff" depending on how
+your program did.  
+
+The rtm program supports three status values:
+
+   value    program meaning     Interpretation
+   -----    ---------------     --------------------------------------------
+   passed   The test passes.    passing
+   failed   The test failed.    program fails to produce an output
+   diff     The test failed.    program is "different"
+
+You are free to limit yourself to passed/failed or use all three
+values.  It is your "diffprog" which choses how to describe the result
+of the comparision test.
+
+The file themis/rtm/doc/difftool.c provides an example of out you
+might implement a comparison tool for your application.
+
+
+
