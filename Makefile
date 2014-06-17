@@ -6,11 +6,11 @@ dist:
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/themis$$$$;                                          \
-          if [ -s /tmp/themis$$$$ ]; then                                            \
+	  @git status -s > /tmp/git_st_$$$$;                                         \
+          if [ -s /tmp/git_st_$$$$ ]; then                                           \
 	    echo "All files not checked in => try again";                            \
 	  else                                                                       \
-	    echo '$(TAG)'                                         >  .version
+	    echo '$(TAG)'                                         >  .version      ; \
 	    $(RM)                                                    $(VERSION_SRC); \
 	    echo 'class Version(object):'                         >> $(VERSION_SRC); \
 	    echo '  def __init__(self):'                          >> $(VERSION_SRC); \
@@ -31,7 +31,7 @@ gittag:
             git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                   ; \
 	    git push --tags                                                        ; \
           fi;                                                                        \
-          rm -f /tmp/themis$$$$
+          rm -f /tmp/git_st_$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
         endif
