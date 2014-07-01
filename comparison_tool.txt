@@ -3,7 +3,7 @@
                    Robert McLay
                  
 
-In order to use "rtm" you'll need a comparison tool.  This tool needs
+In order to use "rtm", you'll need a comparison tool.  This tool needs
 to take two solution and compare them and report whether they are the
 same or different. It will need to take command line arguments.  The
 arguments can be in any order you wish.  It will need to support at
