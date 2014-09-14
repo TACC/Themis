@@ -185,7 +185,7 @@ class Tst(object):
     lineA = run_script.split("\n")
 
     for line in lineA:
-      if (line[0] != "#"):
+      if (not line.startswith("#")):
         mark = True
       if (not mark):
         a.append(line)
