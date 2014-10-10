@@ -96,7 +96,9 @@ class RunActiveTests(BaseTask):
       run_script = tst.expand_run_script(envTbl, job)
     except Exception as e:
       to_stderr("Problem: ", "Failed to create job script for test file: ",tst.get('fn'),"\n")
-      sys.exit(-1)
+      raise
+      #print(e)
+      #sys.exit(-1)
 
     cwd = os.getcwd()
     os.chdir(envTbl['outputDir'])
