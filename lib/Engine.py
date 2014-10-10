@@ -108,7 +108,7 @@ def load_from_file(search_dirA, mod_name):
 def find_fn_in_dir_tree(wd,fn):
   cwd        = os.getcwd()
   result_dir = None
-
+  prev       = ""
   os.chdir(wd)
 
   while (True):
@@ -116,10 +116,11 @@ def find_fn_in_dir_tree(wd,fn):
     if (os.path.exists(fullFn)):
       result_dir = wd
       break
-    if (wd == "/"):
+    if (wd == "/" or wd == prev):
       break
+    prev = wd
     os.chdir("..")
-    wd = os.getcwd()
+    wd   = os.getcwd()
 
   if (result_dir == None):
     Error("You must be in a project!  Did not find: ", fn)
