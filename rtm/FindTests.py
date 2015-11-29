@@ -97,9 +97,10 @@ class FindTests(BaseTask):
 
     dbg.print("Found: ",fn,"\n")
 
-    exec(open(fn).read())
+    namespace = {}
+    exec(open(fn).read(), namespace)
     
-    tstT = build_tstT(fn, test_descript, epoch)
+    tstT = build_tstT(fn, namespace['test_descript'], epoch)
 
     for ident in tstT:
       candidateTstT[ident] = tstT[ident]

@@ -130,7 +130,7 @@ class ReportResults(BaseTask):
     sz      = len(humanDataA)
     numCols = humanDataA[0]
 
-    for idx in xrange(istart, sz):
+    for idx in range(istart, sz):
       row = humanDataA[idx]
       if (type(row) == int):
         if (numCols == -row):
@@ -161,14 +161,14 @@ class ReportResults(BaseTask):
 
     
     widthA = []
-    for idx in xrange(numCols):
+    for idx in range(numCols):
       widthA.append(0)
 
     for row in sA:
       for icol, v in enumerate(row):
         widthA[icol] = max(len(v), widthA[icol])
         
-    for icol in xrange(numCols):
+    for icol in range(numCols):
       widthA[icol] += 2
           
     aa = []

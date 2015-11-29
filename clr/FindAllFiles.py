@@ -13,7 +13,7 @@ class FindAllFiles(BaseTask):
   def execute(self, *args, **kwargs):
     masterTbl         = MasterTbl()
     test_rpt_root_dir = masterTbl['testRptRootDir']
-    keep              = masterTbl['keep']
+    keep              = int(masterTbl['keep'] or '0')
     
     fileA = files_in_tree(test_rpt_root_dir,"*.rtm")
     

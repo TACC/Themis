@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # -*- shell-script -*-
 cmdPath=$1
 cmdName=`expr "$cmdPath" : '.*/\(.*\)'`
@@ -51,5 +51,14 @@ for i in "$@"; do
   fi
 done
 
-$projectDir/lib/themis.py $projectDir $cmdPath "$@"
+PYTHON_CMD=python
+type python3 > /dev/null 2>&1
+if [ "$?" -eq 0 ]; then
+  PYTHON_CMD=python3
+fi
+
+$PYTHON_CMD $projectDir/lib/themis.py $projectDir $cmdPath "$@"
+
+
+
 

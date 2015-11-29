@@ -26,14 +26,17 @@ class JobSubmitBase(object):
     baseFn    = find_py_file("DefaultSystems.py")
     derivedFn = find_py_file("Systems.py")
     
-    exec(open(baseFn).read())
-    exec(open(derivedFn).read())
+    namespace = {}
+    exec(open(baseFn).read(),    namespace)
+    exec(open(derivedFn).read(), namespace)
 
     self.__batchTbl = {}
     batch_hostname = os.environ.get("BATCH_HOSTNAME","INTERACTIVE")
     if (batch_hostname == "INTERACTIVE"):
       self.__batchTbl = DefaultSystems['INTERACTIVE']
     else:
+      Systems        = namespace['Systems']
+      DefaultSystems = namespace['DefaultSystems']
       for k in Systems:
         if (batch_hostname in Systems[k]):
           self.__batchTbl = DefaultSystems[k].copy()

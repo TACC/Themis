@@ -152,10 +152,10 @@ def main():
 
   bt = BeautifulTbl(tbl=a,column=79, wrapped=True, justify = "rrr")
   s  = bt.build_tbl()
-  print ("         1         2         3         4         5         6         7         8")
-  print ("123456789 "*8)
+  print("         1         2         3         4         5         6         7         8")
+  print("123456789 "*8)
 
-  print (s)
+  print(s)
 
 if ( __name__ == '__main__'): main()
 

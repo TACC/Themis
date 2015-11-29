@@ -56,7 +56,7 @@ Example on how to use rtm.
 
 Probably the best way to explain rtm is by way of an example.  In the
 themis-x.y.z/rtm/doc directory is where this example lives.  So change
-your directory to there and lets start.
+your directory to there and let's start.
 
   $ cd themis-x.y.z/rtm/doc
   $ make
@@ -79,7 +79,6 @@ value.  The final two arguments are the gold file that has the known
 good solution and test file.
 
 The results.csv file looks something like this:
-
    
    # Fri Feb 19 16:39:18 2015
    passed

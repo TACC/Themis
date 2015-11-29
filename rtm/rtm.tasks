@@ -1,6 +1,6 @@
 # -*- python -*-
 from __future__ import print_function
-from Engine     import MasterTbl, Error
+from Engine     import MasterTbl, Error, task
 
 def taskMain():
   masterTbl = MasterTbl()

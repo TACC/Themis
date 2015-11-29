@@ -70,7 +70,7 @@ def get_platform():
 
 
 
-  for idx in xrange(len(nameA)):
+  for idx in range(len(nameA)):
     unameT[nameA[idx]] = unameA[idx]
 
   unameT['os_mach'] = unameT['system'] + '-' + unameT['machine']
@@ -143,10 +143,11 @@ class Engine(object):
     return os.path.split(path)
 
   def load_project_data(self, projectDir, projectFn):
+    namespace = {}
     fn = os.path.join(projectDir,projectFn)
     s  = open(fn).read()
-    exec(s)
-    return ProjectData
+    exec(s, namespace)
+    return namespace.get('ProjectData',{})
 
 
   def execute(self, themis_project_dir, execDir, execName):
@@ -158,14 +159,15 @@ class Engine(object):
     
     ProjectData                = self.load_project_data(themis_project_dir, defaultPrjFn)
     masterTbl['projectFn']     = ProjectData.get('projectFn', defaultPrjFn)
-    masterTbl["ThemisVersion"] = ProjectData['ThemisVersion']
+    masterTbl["ThemisVersion"] = ProjectData.get('ThemisVersion')
     masterTbl['task_searchA']  = (taskDir, os.path.join(themis_project_dir,"lib"))
 
     taskFileName               = os.path.join(taskDir, execName + ".tasks")
     sys.path.append(taskDir)
 
 
-    exec(open(taskFileName).read())
+    namespace = {}
+    exec(open(taskFileName).read(),namespace)
     
     verboseCount = 0
     debugCount   = 0
@@ -177,7 +179,7 @@ class Engine(object):
       dbg.activateDebug()
 
     dbg.start("Engine")
-    iret = taskMain()
+    iret = namespace['taskMain']()
     dbg.fini("Engine")
 
     return iret

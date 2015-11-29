@@ -1,6 +1,6 @@
 # -*- python -*-
 from __future__ import print_function
-from Engine     import MasterTbl
+from Engine     import MasterTbl, task
 
 def taskMain():
   masterTbl = MasterTbl()
@@ -9,6 +9,3 @@ def taskMain():
   task("Initialize")
   task("FindAllFiles")
   task("RemoveTestDirs")
-  
-
-
