@@ -20,7 +20,7 @@ class Initialize(BaseTask):
 
     masterTbl['os_mach']  = platformT['os_mach']
     masterTbl['hostname'] = platformT['node']
-    masterTbl['target']   = platformT['targ_summary']
+    masterTbl['target']   = platformT.get('targ_summary',"")
     
     
     
