@@ -73,3 +73,16 @@ tags:
 	       < file_list.1 > file_list.2
 	etags  `cat file_list.2`
 	$(RM) file_list.*
+
+world_update:
+	@git status -s > /tmp/git_st_$$$$;                                         \
+        if [ -s /tmp/git_st_$$$$ ]; then                                           \
+            echo "All files not checked in => try again";                          \
+        else                                                                       \
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`;	   \
+            git push        github     $$branchName;                               \
+            git push --tags github     $$branchName;                               \
+            git push        rtm_github $$branchName;                               \
+            git push --tags rtm_github $$branchName;                               \
+        fi;                                                                        \
+        rm -f /tmp/git_st_$$$$
