@@ -1,5 +1,6 @@
 VERSION_SRC := lib/Version.py
 
+
 dist:
 	git archive --prefix=themis-`cat .version`/ master | bzip2 > themis-`cat .version`.tar.bz2
 
