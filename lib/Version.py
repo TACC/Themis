@@ -2,7 +2,7 @@ class Version(object):
   def __init__(self):
     pass
   def tag(self):
-    return "0.4"
+    return "0.5"
   def git(self):
     return "@git@"
   def date(self):
