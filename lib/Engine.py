@@ -3,7 +3,9 @@ from BaseTask   import BaseTask
 from Dbg        import Dbg
 from time       import localtime
 from fnmatch    import fnmatch
-import os, sys, imp, platform, re
+import os, sys, platform, re
+import importlib.util
+import importlib.machinery
 
 master = {}
 
@@ -76,6 +78,16 @@ def get_platform():
   unameT['os_mach'] = unameT['system'] + '-' + unameT['machine']
   return unameT
 
+def load_source(modname, filename):
+    loader = importlib.machinery.SourceFileLoader(modname, filename)
+    spec = importlib.util.spec_from_file_location(modname, filename, loader=loader)
+    module = importlib.util.module_from_spec(spec)
+    # The module is always executed and not cached in sys.modules.
+    # Uncomment the following line to cache the module.
+    # sys.modules[module.__name__] = module
+    loader.exec_module(module)
+    return module
+
 
 def load_from_file(search_dirA, mod_name):
   class_inst = None
@@ -95,13 +107,12 @@ def load_from_file(search_dirA, mod_name):
     if (found): break
 
   if (file_ext == '.py'):
-    py_mod = imp.load_source(mod_name, fn)
+    py_mod = load_source(mod_name, fn)
   elif (file_ext == '.pyc'):
-    py_mod = imp.load_compiled(mod_name, fn)
+    py_mod = load_compiled(mod_name, fn)
 
   if hasattr(py_mod, expected_class):
     class_inst = py_mod.__dict__[mod_name](mod_name)
-
 
   return class_inst
 
